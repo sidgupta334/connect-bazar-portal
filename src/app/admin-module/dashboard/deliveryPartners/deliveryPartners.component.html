@@ -1,0 +1,140 @@
+<div class="row">
+
+    <div class="col-6">
+
+        <input class="form-control customSearch" type="text" placeholder="Search Record" name="search" [(ngModel)]="searchRecord">
+
+
+    </div>
+    <div class="col-6">
+        <button type="button" (click)="addUser()" data-placement="top" data-toggle="modal" data-target="#userModal" data-backdrop="static" data-keyboard="false" class="btn btn-primary pull-right btn-round animation-on-hover">Add New Partner</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <br>
+
+        <div class="card ">
+            <div class="card-header">
+                <h4 class="card-title"> DELIVERY PARTNERS</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive ps">
+                    <table *ngIf="usersList.length" class="table tablesorter " id="">
+                        <thead class=" text-primary">
+                            <tr>
+                                <th>
+                                    S No
+                                </th>
+                                <th>
+                                    Full Name
+                                </th>
+                                <th>
+                                    Mobile Number
+                                </th>
+                                <th>
+                                    EMAIL ID
+                                </th>
+                                <th class="text-center">
+                                    Last Changed
+                                </th>
+                                <th class="text-center">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of usersList | filter: searchRecord | paginate: {id:'usersPaginate', itemsPerPage: 5, currentPage: p}; let i = index">
+                                <td>
+                                    {{i + 1}}
+                                </td>
+                                <td>
+                                    {{item.fullName}}
+                                </td>
+                                <td>
+                                    {{item.mobile}}
+                                </td>
+                                <td>
+                                    {{item.email}}
+                                </td>
+                                <td class="text-center">
+                                    {{item.created_on}}
+                                </td>
+                                <td class="text-center">
+                                    &nbsp;
+                                    <button (click)="deleteUser(item.deliveryUserId)" class="btn btn-danger btn-fab btn-icon btn-round animation-on-hover">
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <span *ngIf="usersList.length == 0" style="margin-left: 45%;"> NO ITEMS TO DISPLAY</span>
+                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                    </div>
+                    <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                    </div>
+                    <br><br>
+                    <div class="row flex-pagination">
+                        <pagination-controls autoHide="true" id="usersPaginate" screenReaderCurrentLabel="You're on page" (pageChange)="p = $event"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- User Modal -->
+<div class="modal fade model-config" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: -200px" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">{{modalTitle}}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="addForm" (ngSubmit)="addUser()">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input id="fullName" type="text" formControlName="fullName" class="form-control modal-input" placeholder="Enter Full Name">
+                    </div>
+                    <div *ngIf="!vendorId" class="form-group">
+                        <label for="vendorId">Vendor</label>
+                        <select name="vendorId" formControlName="vendorId" id="vendorId" class="form-control modal-input" placeholder="Select Vendor type">
+                        <option *ngFor="let item of allVendors" [value]="item.userId"> {{item.fullName}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Email Id</label>
+                        <input id="username" type="text" formControlName="email" class="form-control modal-input" placeholder="Enter Email id">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" formControlName="password" class="form-control modal-input" placeholder="Enter Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile</label>
+                        <input id="mobile" type="text" maxlength="10" formControlName="mobile" class="form-control modal-input" placeholder="Enter Mobile Number">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <input id="gender" type="text" formControlName="gender" class="form-control modal-input" placeholder="Enter Gender">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button [disabled]="!addForm.valid" (click)="saveUser()" type="button" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

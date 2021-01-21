@@ -1,0 +1,173 @@
+<div class="main-panel ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent ">
+        <div class="container-fluid ">
+            <div class="navbar-wrapper ">
+                <div class="navbar-toggle d-inline ">
+                    <button type="button " class="navbar-toggler ">
+                                    <span class="navbar-toggler-bar bar1 "></span>
+                                    <span class="navbar-toggler-bar bar2 "></span>
+                                    <span class="navbar-toggler-bar bar3 "></span>
+                              </button>
+                </div>
+                <a class="navbar-brand " href="javascript:void(0) ">KITCHEN AREA</a>
+            </div>
+            <button class="navbar-toggler " type="button " data-toggle="collapse " data-target="#navigation " aria-expanded="false " aria-label="Toggle navigation ">
+                        <span class="navbar-toggler-bar navbar-kebab "></span>
+                        <span class="navbar-toggler-bar navbar-kebab "></span>
+                        <span class="navbar-toggler-bar navbar-kebab "></span>
+                  </button>
+            <div class="collapse navbar-collapse " id="navigation ">
+                <ul class="navbar-nav ml-auto ">
+                    <li class="dropdown nav-item date-time " style="margin-top:10px">
+                        <span> Logged in at: {{loggedInTime}}</span>
+                    </li>
+                    <li class="dropdown nav-item ">
+
+
+                    </li>
+                    <li class="separator d-lg-none "></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- End Navbar -->
+    <div class="content2 ">
+
+
+        <div class="row">
+
+            <div class="col-6">
+
+                <input class="form-control customSearch" type="text" placeholder="Search Record" name="search" [(ngModel)]="searchRecord">
+
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-12">
+                <br>
+
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-title"> CURRENT ORDERS</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive ps">
+                            <table class="table tablesorter ">
+                                <thead class=" text-primary">
+                                    <tr>
+                                        <th class="text-center">
+                                            S No
+                                        </th>
+                                        <th class="text-center">
+                                            Table
+                                        </th>
+                                        <th class="text-center">
+                                            Customer
+                                        </th>
+                                        <th class="text-center">
+                                            Items
+                                        </th>
+                                        <th class="text-center">
+                                            Order
+                                        </th>
+                                        <th class="text-center">
+                                            Current
+                                        </th>
+                                        <th class="text-center">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of ordersList | filter: searchRecord | paginate: {itemsPerPage: 10, currentPage: p}; let i = index">
+                                        <td class="text-center">
+                                            {{i + 1}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{item.table_number}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{item.customer_name}}
+                                        </td>
+                                        <td class="text-center">
+                                            <a (click)="selectOrder(item)" data-toggle="modal" data-target="#dishesModal" data-backdrop="static" data-keyboard="false" style="cursor: pointer; text-decoration: underline;">
+                                                                        Click Here </a>
+                                        </td>
+                                        <td class="text-center">
+                                            <span [ngClass]="{'green-text': item.order_status == 'OPEN', 'red-text': item.order_status == 'CLOSED'}">{{item.order_status}}
+                                                                  </span>
+
+                                        </td>
+                                        <td class="text-center">
+                                            <span [ngClass]="{'blue-text': item.sub_order_status == 'ORDERED', 'yellow-text': item.sub_order_status == 'PREPARING', 'green-text': item.sub_order_status == 'COMPLETED'}">{{item.sub_order_status}}</span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <button (click)="prepareOrder(item)" *ngIf="item.sub_order_status == 'ORDERED'" data-toggle="tooltip" data-placement="top" title="Prepare Order" class="btn btn-warning btn-fab btn-icon btn-round animation-on-hover">
+                                                                        <i class="tim-icons icon-spaceship"></i>
+                                                                  </button> &nbsp;
+
+
+                                            <button (click)="completeOrder(item)" *ngIf="item.sub_order_status != 'COMPLETED'" data-toggle="tooltip" data-placement="top" title="Complete Order" class="btn btn-info btn-fab btn-icon btn-round animation-on-hover">
+                                                                        <i class="tim-icons icon-check-2"></i>
+                                                                  </button> &nbsp;
+
+
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                            <span *ngIf="ordersList.length == 0" style="margin-left: 45%;"> NO ITEMS TO
+                                                DISPLAY</span>
+                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                </div>
+                            </div>
+                            <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;">
+                                </div>
+                            </div>
+                            <br><br>
+                            <div class="row flex-pagination">
+                                <pagination-controls autoHide="true" (pageChange)="p = $event"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal fade model-config" id="dishesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalLabel">ORDERED ITEMS</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                          <i class="tim-icons icon-simple-remove"></i>
+                                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <br>
+                        <div *ngFor="let item of dishesList; let i = index" class="row" style="border: 1px solid black;">
+                            <div class="col-6" style="border-right: 1px solid black;">
+                                <span style="color: rgb(42, 42, 42);">{{dishesList[i]}}</span>
+                            </div>
+                            <div class="col-6">
+                                <span style="color: rgb(42, 42, 42);">{{quantitiesList[i]}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

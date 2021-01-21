@@ -1,0 +1,12 @@
+.simple-text {
+    margin-left: 1vw;
+    font-size: larger;
+}
+
+.date-time {
+    margin-top: 10px;
+}
+
+.logout {
+    cursor: pointer;
+}

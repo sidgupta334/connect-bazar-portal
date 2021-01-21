@@ -1,0 +1,99 @@
+<div class="row">
+
+    <div class="col-6">
+
+        <input class="form-control customSearch" type="text" placeholder="Search Record" name="search" [(ngModel)]="searchRecord">
+
+
+    </div>
+    <div class="col-6">
+        <button type="button" (click)="clearForm()" data-toggle="modal" data-target="#pincodeModal" data-backdrop="static" data-keyboard="false" class="btn btn-primary btn-round pull-right animation-on-hover">Add Pincode</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <br>
+
+        <div class="card ">
+            <div class="card-header">
+                <h4 class="card-title"> PIN CODES WHERE WE DELIVER</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive ps">
+                    <table *ngIf="pincodeList.length" class="table tablesorter " id="">
+                        <thead class=" text-primary">
+                            <tr>
+                                <th class="text-center">
+                                    S No
+                                </th>
+                                <th class="text-center">
+                                    Pin Code
+                                </th>
+                                <th class="text-center">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of pincodeList | orderBy: order | filter: searchRecord | paginate: {id: 'pincodePaginate', itemsPerPage: 5, currentPage: p}; let i = index">
+                                <td class="text-center">
+                                    {{i + 1}}
+                                </td>
+                                <td class="text-center">
+                                    {{ item.name }}
+                                </td>
+                                <td class="text-center">
+
+                                    <button (click)="deletePincode(item)" class="btn btn-danger btn-fab btn-icon btn-round animation-on-hover">
+                                          <i class="tim-icons icon-simple-remove"></i>
+                                          </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <span *ngIf="pincodeList.length == 0" style="margin-left: 45%;"> NO ITEMS TO DISPLAY</span>
+                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                    </div>
+                    <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                    </div>
+                    <br><br>
+                    <div class="row flex-pagination">
+                        <pagination-controls autoHide="true" id="pincodePaginate" (pageChange)="p = $event"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Banner Modal -->
+<div class="modal fade model-config" id="pincodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">ADD NEW PINCODE</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="addForm">
+                    <div class="form-group">
+                        <label for="bannerName">Pincode</label>
+                        <input class="form-control modal-input" type="text" formControlName="pincode">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button [disabled]="!addForm.valid" (click)="savePincode()" type="button" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

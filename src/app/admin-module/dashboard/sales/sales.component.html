@@ -1,0 +1,379 @@
+<div class="row">
+    <div class="col-lg-8"></div>
+    <div class="col-lg-4">
+        <span [ngClass]="{'active': dayActive}" (click)="changeChart('Days')" class="chart-btn active">
+            Day
+        </span>
+        <span [ngClass]="{'active': monthActive}" (click)="changeChart('Months')" class="chart-btn">
+            Month
+        </span>
+        <span [ngClass]="{'active': yearActive}" (click)="changeChart('Years')" class="chart-btn">
+            Year
+        </span>
+    </div>
+</div>
+<br>
+<br>
+<div class="row">
+    <div style="display: block;">
+        <div style="width: 75vw;">
+            <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType">
+            </canvas>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+
+
+<div class="row">
+
+    <div class="col-12">
+        <div class="flex-horizontal">
+
+            <!-- Select filter type -->
+            <div class="form-group" style="margin-right: 20px;">
+                <label for="filterType" class="for white-filter">Select Filter type</label>
+                <select (change)="onFilterSelected($event.target.value)" style="color:black; background-color: white;" id="filterType" name="filterType" class="form-control select-lg">
+                    <option *ngFor="let item of filterOptions" [value]="item.value">
+                        {{ item.label }}
+                    </option>
+                </select>
+            </div>
+
+            <form *ngIf="selectedFilter == 'paymentMode' || selectedFilter == 'pinCode' || selectedFilter == 'transactionId'" [formGroup]="textForm" class="flex-horizontal">
+                <div class="form-group" style="width: 150px; margin-right: 20px;">
+                    <label for="textBox" class="white-filter">Enter Text</label>
+                    <input id="textBox" class="form-control" type="text" formControlName="textbox" placeholder="Search Here">
+                </div>
+                <button [disabled]="!textForm.valid" type="button" (click)="filterOrders(selectedFilter)" class="btn btn-primary btn-round animation-on-hover" style="margin-top: 15px;">Filter</button>
+            </form>
+
+            <form *ngIf="selectedFilter == 'paymentMethod'" [formGroup]="dropdownForm" class="flex-horizontal">
+                <div class="form-group" style="width: 150px; margin-right: 20px;">
+                    <label for="filterType" class="for white-filter">Select Payment type</label>
+                    <select (change)="onPaymentSelected($event.target.value)" style="color:black; background-color: white;" id="filterType" name="filterType" class="form-control select-lg">
+                        <option *ngFor="let item of paymentOptions" [value]="item.value">
+                            {{ item.label }}
+                        </option>
+                    </select>
+                </div>
+                <button type="button" (click)="filterOrders(selectedFilter)" class="btn btn-primary btn-round animation-on-hover" style="margin-top: 15px;">Filter</button>
+            </form>
+
+            <form *ngIf="selectedFilter == 'dates'" [formGroup]="dateForm" class="flex-horizontal">
+
+                <div class="form-group" style="width: 150px; margin-right: 20px;">
+                    <label for="deviceName" class="white-filter">Start Date</label>
+                    <my-date-picker name="startDate" [options]="myDatePickerOptions" formControlName="startDate">
+                    </my-date-picker>
+                </div>
+                <div class="form-group" style="width: 150px; margin-right: 20px;">
+                    <label for="deviceName" class="white-filter">End Date</label>
+                    <my-date-picker name="endDate" [options]="myDatePickerOptions" formControlName="endDate">
+                    </my-date-picker>
+                </div>
+                <button [disabled]="!dateForm.valid" type="button" (click)="filterOrders(selectedFilter)" class="btn btn-primary btn-round animation-on-hover" style="margin-top: 15px;">Filter</button>
+            </form>
+            &nbsp; &nbsp;
+            <button type="button" (click)="clearFilters()" class="btn btn-danger btn-round animation-on-hover" style="margin-top: 15px;">Clear</button>
+        </div>
+
+
+
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-12">
+        <br>
+
+        <div class="card ">
+            <div class="card-header">
+                <h4 class="card-title"> COMPLETED ORDERS</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive ps">
+                    <table *ngIf="orders.length" class="table tablesorter ">
+                        <thead class=" text-primary">
+                            <tr>
+                                <th class="text-center">
+                                    Customer Name
+                                </th>
+                                <th class="text-center">
+                                    Order Date
+                                </th>
+                                <th class="text-center">
+                                    Order Amount
+                                </th>
+                                <th class="text-center">
+                                    Print Bill
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of orders | filter: searchRecord | paginate: {id: 'salesPaginate', itemsPerPage: 10, currentPage: p}; let i = index">
+
+                                <td class="text-center">
+                                    {{item.fullName}}
+                                </td>
+
+                                <td class="text-center">
+                                    {{item.orderDate}}
+                                </td>
+
+                                <td class="text-center">
+                                    {{item.finalTotal}}
+                                </td>
+
+                                <td class="text-center">
+                                    <a (click)="generateBill(item)" data-toggle="modal" data-target="#billModal" data-backdrop="static" data-keyboard="false" style="border-bottom: 1px solid rgb(117, 179, 221); color: rgb(117, 179, 221);cursor: pointer;">
+                                        View Invoice</a>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <span *ngIf="orders.length == 0" style="margin-left: 45%;"> NO ITEMS TO DISPLAY</span>
+                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                    </div>
+                    <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                    </div>
+                    <br><br>
+                    <div class="row flex-pagination">
+                        <pagination-controls autoHide="true" id="salesPaginate" (pageChange)="p = $event"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="billModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: -180px;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">BILL REPORT</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="print-bill" *ngIf="report.loaded" class="modal-body report-text">
+                <div class="report-layout">
+                    <p style="text-align: center; font-size: 24px; text-decoration: underline; font-weight: bolder;">
+                        GROCERICA ONLINE STORE
+                    </p>
+                    <br>
+                    <div style="margin:1px" class="row">
+                        <div class="col">Customer: <b> {{report.name}} </b></div>
+                        <div class="col text-right">Phone: <b> {{report.phone}}</b></div>
+                    </div>
+                    <div style="margin:1px" class="row">
+                        <div class="col">
+                            Order Date: <b>{{report.created_on}}</b>
+                        </div>
+                        <div class="col text-right">Payment Mode: <b> {{report.paymentMethod}}</b></div>
+                        <br><br>
+
+                    </div>
+                    <div class="row">
+                        <div class="col report-text">
+
+                            <span style="margin:1px; margin-left: 20px; border-bottom: 1px solid black; font-weight: bolder;">ORDERED
+                                ITEMS:</span>
+                            <br><br>
+
+                            <div class="report-text">
+                                <table border="1" style="width: 96%; margin-left: 2%; margin-right: 2%;">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                S No
+                                            </th>
+                                            <th class="text-center">
+                                                Product Name
+                                            </th>
+                                            <th class="text-center">
+                                                Quantity
+                                            </th>
+                                            <th class="text-center">
+                                                Base Price
+                                            </th>
+                                            <th class="text-center">
+                                                Aggregate Price
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of report.items | paginate: {itemsPerPage: 5, currentPage: p}; let i = index">
+
+                                            <td class="text-center">
+                                                {{ i + 1 }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ item.productName }} ( {{item.brand}} )
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ item.quantity }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                ₹ {{ item.newPrice }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                ₹ {{ item.newPrice * item.quantity }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col report-text ">
+                            <h4 style="color: black; text-align: right;margin-right: 20px;"> GRAND TOTAL: <b> ₹
+                                    {{report.total_amount}} </b></h4>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col report-text ">
+                            <h6 style="color: black; text-align: right;margin-right: 20px;"> DISCOUNT RECEIVED: ₹ {{report.discountApplied}} </h6>
+
+                        </div>
+                    </div>
+
+                    <p style="color: black; width: 96%; margin-left: 2%; margin-right: 2%; font-size: smaller;">
+                        This price is included of all the taxes and deduction of price by any promotion code applied at the time of order.
+                    </p>
+                    <br><br><br><br>
+                    <div class="flex-horizontal">
+                        <h5 style="color: black;"> <img src="assets/img/smile.png" width="20px" height="20px"> THANK YOU FOR SHOPPING WITH US <img src="assets/img/smile.png" width="20px" height="20px"> </h5>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" (click)="printBill()" class="btn btn-primary">PRINT</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Print bill view -->
+<div id="print-bill1" style="background-color:white !important;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;display:none;">
+    <h3 style="margin-left: 42%; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">BILL REPORT</h3>
+    <br>
+    <div style="color: rgb(0, 0, 0) !important;
+    font-size: 12px;">
+        <div style="min-height: 500px;background-color:white !important; border: 1px solid rgb(36, 36, 36);border-radius: 3px;">
+            <p style="font-family:'Segoe UI' !important;text-align: center; font-size: 24px; text-decoration: underline; font-weight: bolder;">
+                GROCERICA ONLINE STORE
+            </p>
+            <br>
+            <div style="margin:1px" class="row">
+                <div style="margin-left:5px;font-family:'Segoe UI' !important;" class="col">Customer: <b>
+                        {{report.name}} </b></div>
+                <div style="margin-top:-20px;margin-right:5px;font-family:'Segoe UI' !important;" class="col text-right">Phone: <b> {{report.phone}}</b></div>
+            </div>
+            <div style="margin:1px" class="row">
+                <div style="font-family:'Segoe UI' !important;margin-left:5px;" class="col">
+                    Order Date: <b>{{report.created_on}}</b>
+                </div>
+                <div style="margin-top:-20px;margin-right:5px;font-family:'Segoe UI' !important;" class="col text-right">Payment Mode: <b> {{report.paymentMethod}}</b></div>
+                <br><br>
+            </div>
+            <div class="row">
+                <div class="col report-text">
+
+                    <span style="margin:1px; margin-left: 20px; border-bottom: 1px solid black; font-weight: bolder;">ORDERED
+                        ITEMS:</span>
+                    <br><br>
+
+                    <div class="report-text">
+                        <table border="1" style="width: 96%; margin-left: 2%; margin-right: 2%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        S No
+                                    </th>
+                                    <th class="text-center">
+                                        Product Name
+                                    </th>
+                                    <th class="text-center">
+                                        Quantity
+                                    </th>
+                                    <th class="text-center">
+                                        Base Price
+                                    </th>
+                                    <th class="text-center">
+                                        Aggregate Price
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of report.items | paginate: {itemsPerPage: 5, currentPage: p}; let i = index">
+
+                                    <td class="text-center">
+                                        {{ i + 1 }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        {{ item.productName }} ( {{item.brand}} )
+                                    </td>
+
+                                    <td class="text-center">
+                                        {{ item.quantity }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        ₹ {{ item.newPrice }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        ₹ {{ item.newPrice * item.quantity }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col report-text ">
+                    <h6 style="color: black; text-align: right;margin-right: 20px;"> DISCOUNT RECEIVED: ₹ {{report.discountApplied}} </h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col report-text ">
+                    <h4 style="color: black; text-align: right;margin-right: 20px;"> GRAND TOTAL: <b> ₹
+                            {{report.total_amount}} </b></h4>
+
+                </div>
+            </div>
+
+            <p style="color: black; width: 96%; margin-left: 2%; margin-right: 2%; font-size: smaller;">
+                This price is included of all the taxes and deduction of price by any promotion code applied at the time of order.
+            </p>
+            <br><br><br><br>
+            <div style=" display: flex;align-items: center;justify-content: center;flex-direction: row;">
+                <h5 style="color: black;"> <img src="https://image.flaticon.com/icons/svg/742/742923.svg" width="20px" height="20px"> THANK YOU FOR SHOPPING WITH US <img src="https://image.flaticon.com/icons/svg/742/742923.svg" width="20px" height="20px"> </h5>
+            </div>
+
+        </div>
+    </div>
+</div>

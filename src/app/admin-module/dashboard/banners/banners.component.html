@@ -1,0 +1,146 @@
+<div class="row">
+
+    <div class="col-6">
+
+        <input class="form-control customSearch" type="text" placeholder="Search Record" name="search" [(ngModel)]="searchRecord">
+
+
+    </div>
+    <div class="col-6">
+        <button type="button" (click)="addBanner()" data-toggle="modal" data-target="#bannerModal" data-backdrop="static" data-keyboard="false" class="btn btn-primary btn-round pull-right animation-on-hover">Add Banner</button>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-12">
+        <br>
+
+        <div class="card ">
+            <div class="card-header">
+                <h4 class="card-title"> Banner Masters</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive ps">
+                    <table *ngIf="bannersList.length" class="table tablesorter " id="">
+                        <thead class=" text-primary">
+                            <tr>
+                                <th class="text-center">
+                                    S No
+                                </th>
+                                <th class="text-center">
+                                    Image
+                                </th>
+                                <th class="text-center">
+                                    Banner Name
+                                </th>
+                                <th class="text-center">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of bannersList | orderBy: order | filter: searchRecord | paginate: {id: 'bannersPaginate', itemsPerPage: 5, currentPage: p}; let i = index">
+                                <td class="text-center">
+                                    {{i + 1}}
+                                </td>
+                                <td class="text-center">
+                                    <a (click)="viewImage(item)" style="text-decoration: underline; cursor: pointer;" data-toggle="modal" data-target="#imgModal" data-backdrop="static" data-keyboard="false"> Click Here</a>
+                                </td>
+                                <td class="text-center">
+                                    {{ item.bannerName }}
+                                </td>
+                                <td class="text-center">
+
+                                    <button (click)="deleteBanner(item)" class="btn btn-danger btn-fab btn-icon btn-round animation-on-hover">
+                                          <i class="tim-icons icon-simple-remove"></i>
+                                          </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <span *ngIf="bannersList.length == 0" style="margin-left: 45%;"> NO ITEMS TO DISPLAY</span>
+                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                    </div>
+                    <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                    </div>
+                    <br><br>
+                    <div class="row flex-pagination">
+                        <pagination-controls id="bannersPaginate" (pageChange)="p = $event" autoHide="true"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Banner Modal -->
+<div class="modal fade model-config" id="bannerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">{{modalTitle}}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="addForm" (ngSubmit)="addBanner()">
+                    <div class="form-group">
+                        <label for="bannerName">Banner Name</label>
+                        <input class="form-control modal-input" type="text" formControlName="bannerName">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="upload-custom" for="uploadImage1">Click here to Upload Image</label>
+                        <input (change)="onSelectedFile($event)" type="file" name="file" accept="image/png,image/jpeg" />
+                        <span *ngIf="addForm.value.uploadImage && !fileError"> File Selected: {{addForm.value.uploadImage.name}} </span>
+                        <br>
+                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only with size less than 500 KB.</small>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button [disabled]="!addForm.valid && fileError" (click)="saveBanner()" type="button" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Banner Modal -->
+<div class="modal fade model-config" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Banner Viewer</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+            </div>
+            <div class="modal-body flex-horizontal">
+                <img [src]="imgUrl">
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

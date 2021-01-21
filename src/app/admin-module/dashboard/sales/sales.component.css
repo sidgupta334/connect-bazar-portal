@@ -1,0 +1,46 @@
+.chart-btn {
+    display: inline-block;
+    text-align: center;
+    width: 60px;
+    border: 1px solid white;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.active {
+    background-color: #3A93CE;
+    border: 1px solid #3A93CE;
+}
+
+.flex-horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.mydp .selection {
+    background-color: black !important;
+}
+
+.report-layout {
+    min-height: 500px;
+    border: 1px solid rgb(36, 36, 36);
+    border-radius: 3px;
+}
+
+.report-text {
+    color: rgb(0, 0, 0) !important;
+    font-size: 12px;
+}
+
+.flex-container-vertical {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.white-filter {
+    color: white;
+}

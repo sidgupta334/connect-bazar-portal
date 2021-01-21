@@ -1,0 +1,339 @@
+<div class="row">
+    <div class="col-6">
+        <button (click)="addDIshModalOpen()" data-toggle="modal" data-target="#dishesModal" data-backdrop="static" data-keyboard="false" class="btn btn-primary btn-round animation-on-hover">Add New Product</button>
+    </div>
+</div>
+<br><br>
+<div class="row">
+    <div *ngFor="let category of productHierarchy; let i = index" class="col-6">
+        <div class="card">
+            <div class="card-header dish-header">
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h4 class="card-title"> {{category.categoryName | uppercase}} </h4>
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <span (click)="deleteCategory(category.categoryId)" style="margin-left: 20px; cursor: pointer;" class="pull-right"> <i class="tim-icons icon-simple-remove" data-toggle="tooltip" title="Remove Category"></i>
+                        </span>
+
+                        <span class="pull-right" data-toggle="modal" data-target="#categoryModal2" data-backdrop="static" data-keyboard="false" (click)="updateCategory(category)" style="cursor: pointer;"> <i class="tim-icons icon-pencil" data-toggle="tooltip" title="Edit Category"></i>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-body dish-body">
+
+                <table class="table tablesorter">
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>
+                                S No
+                            </th>
+                            <th>
+                                Product Name
+                            </th>
+                            <th class="text-center">
+                                Base Price
+                            </th>
+                            <th class="text-center">
+                                Brand
+                            </th>
+                            <th class="text-center">
+                                Availability
+                            </th>
+                            <th class="text-center">
+                                Image
+                            </th>
+                            <th class="text-center">
+                                Actions
+                            </th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of category.products; let i = index">
+
+                            <td>
+                                {{i + 1}}
+                            </td>
+
+                            <td>
+                                {{product.productName}}
+                            </td>
+                            <td class="text-center">
+                                ₹ {{product.newPrice}}
+                            </td>
+
+                            <td class="text-center">
+                                {{product.brand}}
+                            </td>
+                            <td class="text-center">
+                                <label class="switch">
+                                    <input type="checkbox" (click)="toggleChanged(product)" [checked]="product.available ? true : false">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+
+                            <td class="text-center">
+                                <img [src]="product.url" width="30" height="30">
+                            </td>
+
+                            <td class="text-center">
+                                <span (click)="updateproductClicked(category,product)" data-toggle="modal" data-target="#productesUpdateModal" data-backdrop="static" data-keyboard="false">
+                                      
+                                      <i class="tim-icons icon-pencil" style="cursor: pointer;" data-toggle="tooltip" title="Edit product"></i></span> &nbsp;
+                                <span>
+                                    <i (click)="deleteproduct(product)" style="cursor: pointer;" data-toggle="tooltip" title="Remove product" class="tim-icons icon-simple-remove"></i>
+                                 </span>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div *ngIf="!vendorId" class="col-lg-6">
+        <div class="card">
+            <div data-toggle="modal" data-target="#categoryModal" data-backdrop="static" data-keyboard="false" (click)="openCategoryModal()" style="cursor: pointer; height: 460px;" class="flex-container">
+                <i style="font-size: 48px" class="tim-icons icon-simple-add"></i>
+                <br>
+                <span> ADD NEW CATEGORY  </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- -------------------------------Products Modal ------------------------------------->
+<!-- Save Modal -->
+<div class="modal fade model-config" id="dishesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="top: -200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Add Product</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="productForm">
+
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input id="productName" type="text" formControlName="productName" class="form-control modal-input" placeholder="Enter Product Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="oldPrice">Old Price</label>
+                        <input id="oldPrice" type="number" formControlName="oldPrice" class="form-control modal-input" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPrice">New Price</label>
+                        <input id="newPrice" type="number" formControlName="newPrice" class="form-control modal-input" placeholder="0.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brand">Brand</label>
+                        <input id="brand" type="text" formControlName="brand" class="form-control modal-input" placeholder="Enter Brand Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="desc">Product Description</label>
+                        <textarea class="form-control modal-input" id="desc" maxlength="255" placeholder="Enter description about product" formControlName="productDescription" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Select Product Category</label>
+                        <select class="form-control modal-input" formControlName="categoryId" id="category">
+                              <option *ngFor="let category of productHierarchy; let i = index" [value]="productHierarchy[i].categoryId">    
+                                    {{ productHierarchy[i].categoryName }}        
+                              </option>
+                        </select>
+                    </div>
+                    <div *ngIf="!vendorId" class="form-group">
+                        <label for="Vendor">Select Vendor</label>
+                        <select class="form-control modal-input" formControlName="vendorId" id="Vendor">
+                              <option *ngFor="let vendor of allVendors; let i = index" [value]="allVendors[i].userId">    
+                                    {{ allVendors[i].fullName }}        
+                              </option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label class="upload-custom" for="uploadImage">Click here to Upload Image</label>
+                        <input (change)="onSelectedFile($event)" type="file" name="file" accept="image/png,image/jpeg" />
+                        <span *ngIf="productForm.value.uploadImage && !fileError"> File Selected: {{productForm.value.uploadImage.name}} </span>
+                        <br>
+                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only less than 300 KB.</small>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button (click)="addProduct()" [disabled]="!productForm.valid || fileError" type="submit" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!--------------- Update modal -------------------->
+
+<div class="modal fade model-config" id="productesUpdateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Update Product</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="productForm2">
+
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input id="productName" type="text" formControlName="productName" class="form-control modal-input" placeholder="Enter Product Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="oldPrice">Old Price</label>
+                        <input id="oldPrice" type="number" formControlName="oldPrice" class="form-control modal-input" placeholder="0.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newPrice">New Price</label>
+                        <input id="newPrice" type="number" formControlName="newPrice" class="form-control modal-input" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="brand">Brand</label>
+                        <input id="brand" type="text" formControlName="brand" class="form-control modal-input" placeholder="Enter Brand Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="desc">Product Description</label>
+                        <textarea class="form-control modal-input" id="desc" maxlength="255" placeholder="Enter description about product" formControlName="productDescription" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Select Product Category</label>
+                        <select class="form-control modal-input" formControlName="categoryId" id="category">
+                              <option *ngFor="let category of productHierarchy; let i = index" [value]="productHierarchy[i].categoryId">    
+                                    {{ productHierarchy[i].categoryName }}        
+                              </option>
+                        </select>
+                    </div>
+
+                    <div *ngIf="!vendorId" class="form-group s">
+                        <label for="Vendor">Select Vendor</label>
+                        <select class="form-control modal-input" formControlName="vendorId" id="Vendor">
+                              <option *ngFor="let vendor of allVendors; let i = index" [value]="allVendors[i].userId">    
+                                    {{ allVendors[i].fullName }}        
+                              </option>
+                        </select>
+                    </div>
+
+                    <br>
+                    <div class="form-group">
+                        <label class="upload-custom" for="uploadImage">Click here to Upload Image</label>
+                        <input (change)="onSelectedFile2($event)" type="file" name="file" accept="image/png,image/jpeg" />
+                        <span *ngIf="productForm2.value.uploadImage.name && !fileError"> File Selected: {{productForm2.value.uploadImage.name}} </span>
+                        <br>
+                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only less than 300 KB.</small>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button (click)="updateProductDetails()" [disabled]="!productForm2.valid || fileError" type="submit" class="btn btn-primary" data-dismiss="modal">UPDATE</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!----------------------------------- Create category modal------------------------- -->
+<!-- Save Modal -->
+<div class="modal fade model-config" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Add Product Category</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+            </div>
+            <div class="modal-body">
+
+                <form [formGroup]="categoryForm">
+
+                    <div class="form-group">
+                        <label for="dishName">Dish Category Name</label>
+                        <input id="dishName" type="text" formControlName="categoryName" class="form-control modal-input" placeholder="Enter Category Name">
+                    </div>
+                    <div class="form-group">
+                        <label class="upload-custom" for="uploadImage">Click here to Upload Image</label>
+                        <input (change)="onSelectedFile3($event)" type="file" name="file" accept="image/png,image/jpeg" />
+                        <span *ngIf="categoryForm.value.uploadImage.name && !fileError"> File Selected: {{categoryForm.value.uploadImage.name}} </span>
+                        <br>
+                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only with size less than 300 KB.</small>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+
+                <button (click)="saveDishCategory()" [disabled]="!categoryForm.valid || fileError" type="submit" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade model-config" id="categoryModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Update Dish Category</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+            </div>
+            <div class="modal-body">
+
+                <form [formGroup]="categoryForm2">
+                    <div class="form-group">
+                        <label for="dishName">Dish Category Name</label>
+                        <input id="dishName" type="text" formControlName="categoryName" class="form-control modal-input" placeholder="Enter Category Name">
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+
+                <button (click)="saveDishCategory()" [disabled]="!categoryForm2.valid" type="submit" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,485 @@
+<div *ngIf="!vendorId" class="row flex-horizontal">
+    <div class="col-4 flex-vertical">
+        <h3>TODAY</h3>
+        <div class="dashboard">
+            <div class="flex-vertical space-between">
+                <h4>{{saleToday.orderCount || 0}}</h4>
+                <span class="span-orders">TOTAL ORDERS</span>
+            </div>
+            <div class="vl space-between"></div>
+            <div class="flex-vertical space-between">
+                <h4>{{saleToday.amount || 0}}</h4>
+                <span class="span-orders">TOTAL AMOUNT</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 flex-vertical">
+        <h3>THIS MONTH</h3>
+        <div class="dashboard">
+            <div class="flex-vertical space-between">
+                <h4>{{saleMonthly.orderCount || 0}}</h4>
+                <span class="span-orders">TOTAL ORDERS</span>
+            </div>
+            <div class="vl space-between"></div>
+            <div class="flex-vertical space-between">
+                <h4>{{saleMonthly.amount || 0}}</h4>
+                <span class="span-orders">TOTAL AMOUNT</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 flex-vertical">
+        <h3>THIS YEAR</h3>
+        <div class="dashboard">
+            <div class="flex-vertical space-between">
+                <h4>{{saleYearly.orderCount || 0}}</h4>
+                <span class="span-orders">TOTAL ORDERS</span>
+            </div>
+            <div class="vl space-between"></div>
+            <div class="flex-vertical space-between">
+                <h4>{{saleYearly.amount || 0}}</h4>
+                <span class="span-orders">TOTAL AMOUNT</span>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+
+    <div class="col-6">
+
+        <input class="form-control customSearch" type="text" placeholder="Search Record" name="search" [(ngModel)]="searchRecord">
+
+
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <br>
+
+        <div class="card ">
+            <div class="card-header">
+                <h4 class="card-title"> CURRENT ORDERS</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive ps">
+                    <table *ngIf="ordersList.length" class="table tablesorter ">
+                        <thead class=" text-primary">
+                            <tr>
+                                <th class="text-center">
+                                    Order ID
+                                </th>
+                                <th class="text-center">
+                                    Customer Name
+                                </th>
+                                <th class="text-center" style="width: 120px;">
+                                    Order Date
+                                </th>
+                                <th class="text-center">
+                                    Items
+                                </th>
+                                <th class="text-center">
+                                    Total Amount
+                                </th>
+                                <th class="text-center">
+                                    Order Status
+                                </th>
+                                <th class="text-center">
+                                    Delivery Address
+                                </th>
+                                <th class="text-center" style="width: 200px;">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of ordersList | filter: searchRecord | paginate: {id: 'foo', itemsPerPage: 10, currentPage: p}; let i = index">
+                                <td class="text-center">
+                                    {{item.orderId}}
+                                </td>
+                                <td class="text-center">
+                                    {{item.fullName}}
+                                </td>
+                                <td class="text-center">
+                                    <b> {{item.orderDate}} </b>
+                                </td>
+                                <td class="text-center">
+                                    <a (click)="selectOrder(item)" data-toggle="modal" data-target="#dishesModal" data-backdrop="static" data-keyboard="false" style="cursor: pointer; text-decoration: underline;"> Click Here </a>
+                                </td>
+                                <td class="text-center">
+                                    <b>{{item.finalTotal}}</b>
+                                </td>
+                                <td class="text-center">
+                                    <span *ngIf="item.orderStatus == 'ORDERED'" style="color: yellow;">
+                                        {{item.orderStatus}}</span>
+                                    <span *ngIf="item.orderStatus == 'CONFIRMED'" style="color: greenyellow;">
+                                        {{item.orderStatus}}</span>
+                                    <span *ngIf="item.orderStatus == 'DELIVERED'" style="color: rgb(14, 194, 44);">
+                                        {{item.orderStatus}}</span>
+
+                                </td>
+                                <td class="text-center">
+                                    {{item.address1}} &nbsp; {{item.city}} &nbsp; {{item.state}} &nbsp; {{item.pincode}}
+                                </td>
+
+                                <td class="text-center">
+
+                                    <button (click)="confirmOrder(item)" *ngIf="item.orderStatus != 'COMPLETED' && item.orderStatus != 'CONFIRMED' && item.orderStatus != 'DELIVERED'" data-toggle="tooltip" data-placement="top" title="Dispatch Order" class="overview-btn btn btn-primary btn-fab btn-icon btn-round animation-on-hover">
+                                        <i class="tim-icons icon-check-2"></i>
+                                    </button> &nbsp;
+
+
+                                    <button [disabled]="item.orderStatus == 'ORDERED'" (click)="completeOrder(item.orderId)" *ngIf="item.orderStatus != 'COMPLETED'" data-toggle="tooltip" data-placement="top" title="Complete Order" class="overview-btn btn btn-success btn-fab btn-icon btn-round animation-on-hover">
+                                        <i class="tim-icons icon-send"></i>
+                                    </button> &nbsp;
+
+
+                                    <button *ngIf="item.orderStatus != 'DELIVERED'" (click)="addCancelReason(item)" data-toggle="tooltip" data-placement="top" data-toggle="modal" data-target="#cancelModal" data-backdrop="static" data-keyboard="false" title="Cancel Order" class="overview-btn btn btn-danger btn-fab btn-icon btn-round animation-on-hover"
+                                        data>
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button> &nbsp;
+
+                                    <button (click)="generateBill(item)" data-toggle="tooltip" title="Print Bill" class="overview-btn btn btn-info btn-fab btn-icon btn-round animation-on-hover" data>
+                                        <i class="tim-icons icon-paper"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <span *ngIf="ordersList.length == 0" style="margin-left: 45%;"> NO ITEMS TO DISPLAY</span>
+                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                    </div>
+                    <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                    </div>
+                    <br><br>
+                    <div class="row flex-pagination">
+                        <pagination-controls id="foo" autoHide="true" (pageChange)="p = $event"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade model-config" id="dishesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">ORDERED ITEMS</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="isSafe">
+                    <img src="../../../../assets/img/shield.png" width="25" height="25"> Maintain Social Distancing (Safe Delivery)
+                </div>
+                <br>
+                <div class="row" style="border: 1px solid black;">
+                    <div class="col-6" style="border-right: 1px solid black;">
+                        <span style="color: rgb(42, 42, 42);">PRODUCT NAME</span>
+                    </div>
+                    <div class="col-3">
+                        <span style="color: rgb(42, 42, 42);">QUANTITY</span>
+                    </div>
+                    <div class="col-3">
+                        <span style="color: rgb(42, 42, 42);">BASE PRICE</span>
+                    </div>
+                </div>
+                <div *ngFor="let item of dishesList; let i = index" class="row" style="border: 1px solid black;">
+                    <div class="col-6" style="border-right: 1px solid black;">
+                        <span style="color: rgb(42, 42, 42);">{{item.productName}} ( {{item.brand}} )</span>
+                    </div>
+                    <div class="col-3">
+                        <span style="color: rgb(42, 42, 42);">{{item.quantity}}</span>
+                    </div>
+                    <div class="col-3">
+                        <span style="color: rgb(42, 42, 42);">{{item.newPrice}}</span>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        Select Delivery Partner to deliver:
+                    </div>
+                    <div class="col-4">
+                        <select [(ngModel)]="selectedVendor" (change)="mapAddress($event.target.value)" class="form-control modal-input" name="vendorName" id="vendorName">
+                            <option *ngFor="let item of deliveryPartnerList" [value]="item.deliveryUserId"> {{item.fullName}}</option>
+                        </select> &nbsp;
+                    </div>
+
+                    <div class="col-4">
+                        <a [href]="addressUrl" data-action="share/whatsapp/share" target="_blank" *ngIf="selectedVendor" style="cursor: pointer;" title="Share details to Delivery Partner"><img style="float:left" src="../../../../assets/img/whatsapp.png" width="40" height="40" /> &nbsp; &nbsp; <span style="top: 5px"> Send Details </span> </a>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-6"></div>
+                    <div class="col-3">
+                        <button [disabled]="!selectedVendor" (click)="mapVendor()" type="button" class="btn btn-primary">Save</button> &nbsp;
+                    </div>
+                    <div class="col-3">
+                        <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade model-config" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Cancellation Reason</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="textArea">Add Cancellation Reason</label>
+                    <textarea id="textArea" [(ngModel)]="cancellationReason" class="form-control modal-input" placeholder="Enter Cancellation Reason"></textarea>
+                </div>
+
+                <button [disabled]="cancellationReason == ''" (click)="cancelOrder()" type="button" class="btn btn-primary" data-dismiss="modal">Cancel Order</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="billModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: -180px;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">BILL REPORT</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="print-bill" *ngIf="report.loaded" class="modal-body report-text">
+                <div class="report-layout">
+                    <p style="text-align: center; font-size: 24px; text-decoration: underline; font-weight: bolder;">
+                        GROCERICA ONLINE STORE
+                    </p>
+                    <br>
+                    <div style="margin:1px" class="row">
+                        <div class="col">Customer: <b> {{report.name}} </b></div>
+                        <div class="col text-right">Phone: <b> {{report.phone}}</b></div>
+                    </div>
+                    <div style="margin:1px" class="row">
+                        <div class="col">
+                            Order Date: <b>{{report.created_on}}</b>
+                        </div>
+                        <div class="col text-right">Payment Mode: <b> {{report.paymentMethod}}</b></div>
+                        <br><br>
+
+                    </div>
+                    <div class="row">
+                        <div class="col report-text">
+
+                            <span style="margin:1px; margin-left: 20px; border-bottom: 1px solid black; font-weight: bolder;">ORDERED
+                                ITEMS:</span>
+                            <br><br>
+
+                            <div class="report-text">
+                                <table border="1" style="width: 96%; margin-left: 2%; margin-right: 2%;">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                S No
+                                            </th>
+                                            <th class="text-center">
+                                                Product Name
+                                            </th>
+                                            <th class="text-center">
+                                                Quantity
+                                            </th>
+                                            <th class="text-center">
+                                                Base Price
+                                            </th>
+                                            <th class="text-center">
+                                                Aggregate Price
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of report.items | paginate: {itemsPerPage: 5, currentPage: p}; let i = index">
+
+                                            <td class="text-center">
+                                                {{ i + 1 }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ item.productName }} ( {{item.brand}} )
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ item.quantity }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                ₹ {{ item.newPrice }}
+                                            </td>
+
+                                            <td class="text-center">
+                                                ₹ {{ item.newPrice * item.quantity }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col report-text ">
+                            <h4 style="color: black; text-align: right;margin-right: 20px;"> GRAND TOTAL: <b> ₹
+                                    {{report.total_amount}} </b></h4>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col report-text ">
+                            <h6 style="color: black; text-align: right;margin-right: 20px;"> DISCOUNT RECEIVED: ₹ {{report.discountApplied}} </h6>
+
+                        </div>
+                    </div>
+
+                    <p style="color: black; width: 96%; margin-left: 2%; margin-right: 2%; font-size: smaller;">
+                        This price is included of all the taxes and deduction of price by any promotion code applied at the time of order.
+                    </p>
+                    <br><br><br><br>
+                    <div class="flex-horizontal">
+                        <h5 style="color: black;"> <img src="assets/img/smile.png" width="20px" height="20px"> THANK YOU FOR SHOPPING WITH US <img src="assets/img/smile.png" width="20px" height="20px"> </h5>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" [useExistingCss]="true" printSectionId="print-bill" ngxPrint class="btn btn-primary">PRINT</button> &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Print modal view -->
+<div id="print-bill1" style="background-color:white !important;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;display:none;">
+    <h3 style="margin-left: 42%; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">BILL REPORT</h3>
+    <br>
+    <div style="color: rgb(0, 0, 0) !important;
+    font-size: 12px;">
+        <div style="min-height: 500px;background-color:white !important; border: 1px solid rgb(36, 36, 36);border-radius: 3px;">
+            <p style="font-family:'Segoe UI' !important;text-align: center; font-size: 24px; text-decoration: underline; font-weight: bolder;">
+                GROCERICA ONLINE STORE
+            </p>
+            <br>
+            <div style="margin:1px" class="row">
+                <div style="margin-left:5px;font-family:'Segoe UI' !important;" class="col">Customer: <b>
+                        {{report.name}} </b></div>
+                <div style="margin-top:-20px;margin-right:5px;font-family:'Segoe UI' !important;" class="col text-right">Phone: <b> {{report.phone}}</b></div>
+            </div>
+            <div style="margin:1px" class="row">
+                <div style="font-family:'Segoe UI' !important;margin-left:5px;" class="col">
+                    Order Date: <b>{{report.created_on}}</b>
+                </div>
+                <div style="margin-top:-20px;margin-right:5px;font-family:'Segoe UI' !important;" class="col text-right">Payment Mode: <b> {{report.paymentMethod}}</b></div>
+                <br><br>
+            </div>
+            <div class="row">
+                <div class="col report-text">
+
+                    <span style="margin:1px; margin-left: 20px; border-bottom: 1px solid black; font-weight: bolder;">ORDERED
+                        ITEMS:</span>
+                    <br><br>
+
+                    <div class="report-text">
+                        <table border="1" style="width: 96%; margin-left: 2%; margin-right: 2%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        S No
+                                    </th>
+                                    <th class="text-center">
+                                        Product Name
+                                    </th>
+                                    <th class="text-center">
+                                        Quantity
+                                    </th>
+                                    <th class="text-center">
+                                        Base Price
+                                    </th>
+                                    <th class="text-center">
+                                        Aggregate Price
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of report.items | paginate: {itemsPerPage: 5, currentPage: p}; let i = index">
+
+                                    <td class="text-center">
+                                        {{ i + 1 }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        {{ item.productName }} ( {{item.brand}} )
+                                    </td>
+
+                                    <td class="text-center">
+                                        {{ item.quantity }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        ₹ {{ item.newPrice }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        ₹ {{ item.newPrice * item.quantity }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col report-text ">
+                    <h6 style="color: black; text-align: right;margin-right: 20px;"> DISCOUNT RECEIVED: ₹ {{report.discountApplied}} </h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col report-text ">
+                    <h4 style="color: black; text-align: right;margin-right: 20px;"> GRAND TOTAL: <b> ₹
+                            {{report.total_amount}} </b></h4>
+
+                </div>
+            </div>
+
+            <p style="color: black; width: 96%; margin-left: 2%; margin-right: 2%; font-size: smaller;">
+                This price is included of all the taxes and deduction of price by any promotion code applied at the time of order.
+            </p>
+            <br><br><br><br>
+            <div style=" display: flex;align-items: center;justify-content: center;flex-direction: row;">
+                <h5 style="color: black;"> <img src="https://image.flaticon.com/icons/svg/742/742923.svg" width="20px" height="20px"> THANK YOU FOR SHOPPING WITH US <img src="https://image.flaticon.com/icons/svg/742/742923.svg" width="20px" height="20px"> </h5>
+            </div>
+
+        </div>
+    </div>
+</div>

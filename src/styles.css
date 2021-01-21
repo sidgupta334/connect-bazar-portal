@@ -1,0 +1,169 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~bootstrap/dist/css/bootstrap.min.css';
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.customSearch {
+    width: 240px !important;
+}
+
+.flex-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* .model-config {
+    background-color: black;
+    opacity: 0.8;
+} */
+
+.modal-backdrop {
+    background-color: black;
+    opacity: 95 !important;
+}
+
+.modal-input {
+    color: rgb(50, 50, 50) !important;
+}
+
+.modal {
+    margin-bottom: 150px;
+}
+
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    background: #3d4550;
+}
+
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: rgb(73, 73, 109);
+}
+
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(50, 50, 75);
+    transition: all 0.5s;
+}
+
+
+/* CSS styling for creating toggle switch */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(78, 82, 117);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: rgb(255, 255, 255);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #3C95D1;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #3C95D1;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(14px);
+    -ms-transform: translateX(14px);
+    transform: translateX(14px);
+}
+
+
+/* Rounded sliders */
+
+.slider.round {
+    border-radius: 30px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+/* Custom file upload styling */
+
+.upload-custom {
+    display: block;
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    background-color: rgb(177, 176, 176);
+    color: black;
+    border: solid 2px rgb(70, 69, 69);
+    ;
+}
+
+.green-text {
+    color: rgb(33, 207, 33);
+}
+
+.red-text {
+    color: rgb(255, 61, 61);
+}
+
+.blue-text {
+    color: rgb(61, 193, 245);
+}
+
+.yellow-text {
+    color: rgb(255, 255, 43);
+}
+
+.small-text {
+    font-size: smaller;
+}
+
+pagination-controls /deep/ .ngx-pagination li a {
+    color: white;
+}

@@ -1,0 +1,106 @@
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="coupon-container">
+            <div class="coupon-header">
+                <h3 style="font-weight: lighter; margin-top: 25px;"> ACTIVE COUPONS </h3>
+            </div>
+
+            <br>
+            <div class="table-responsive ps">
+                <table class="table tablesorter " id="">
+                    <thead *ngIf="couponsList.length != 0" class=" text-primary">
+                        <tr>
+                            <th class="text-center">
+                                S No
+                            </th>
+                            <th class="text-center">
+                                Coupon Name
+                            </th>
+                            <th class="text-center">
+                                Percentage
+                            </th>
+                            <th class="text-center">
+                                Maximum Discount
+                            </th>
+                            <th class="text-center">
+                                Delete
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of couponsList | filter: searchRecord | paginate: {id:'couponsPaginate', itemsPerPage: 5, currentPage: p}; let i = index">
+                            <td class="text-center">
+                                {{item.couponId}}
+                            </td>
+                            <td class="text-center">
+                                {{item.couponName}}
+                            </td>
+
+                            <td class="text-center">
+                                <span *ngIf="item.percentageDiscount > 0"> {{item.percentageDiscount}} %</span>
+                                <span *ngIf="item.percentageDiscount == 0"> NA </span>
+                            </td>
+
+                            <td class="text-center">
+                                {{item.maxDiscount}} ₹
+                            </td>
+
+                            <td class="text-center">
+                                <button (click)=" deleteCoupon(item.couponId)" class="btn btn-danger btn-fab btn-icon btn-round animation-on-hover">
+                                          <i class="tim-icons icon-simple-remove"></i>
+                                          </button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <span *ngIf="couponsList.length == 0" style="margin-left: 35%;"> NO ITEMS TO DISPLAY</span>
+                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                </div>
+                <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                </div>
+                <br><br>
+                <div *ngIf="couponsList.length != 0" class="row flex-pagination">
+                    <pagination-controls autoHide="true" id="couponsPaginate" (pageChange)="p = $event"></pagination-controls>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="coupon-container">
+            <div class="coupon-header">
+                <h3 style="font-weight: lighter; margin-top: 25px;"> CREATE NEW COUPON </h3>
+            </div>
+            <br>
+            <form class="form-style" [formGroup]="addForm">
+                <div class="form-group">
+                    <label style="color: white;" for="fullName">Coupon Name</label>
+                    <input id="fullName" type="text" maxlength="50" formControlName="couponName" class="form-control" placeholder="Enter Coupon Name">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label style="color: white;" for="percent">Percentage Value</label>
+                    <input id="percent" type="number" min="0" max="100" formControlName="couponPercentage" class="form-control" placeholder="0">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label style="color: white;" for="discount">Maximum Discount</label>
+                    <input id="discount" type="number" min="0" formControlName="maxDiscount" class="form-control" placeholder="0">
+                </div>
+                <div *ngIf="!vendorId" class="form-group">
+                    <label style="color: white;" for="vendorId">Select Vendor</label>
+                    <select style="background-color: rgb(169, 200, 214);" class="form-control modal-input" formControlName="vendorId" id="vendorId">
+                              <option *ngFor="let vendor of allVendors; let i = index" [value]="allVendors[i].userId">    
+                                    {{ allVendors[i].fullName }}        
+                              </option>
+                        </select>
+                </div>
+                <button style="margin-left: 35%;" [disabled]="!addForm.valid" (click)="saveCoupon()" type="button" class="btn btn-primary animation-on-hover">SAVE</button>
+            </form>
+        </div>
+    </div>
+</div>
