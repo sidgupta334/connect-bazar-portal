@@ -27,7 +27,7 @@
             </div>
             <div class="card-body dish-body">
 
-                <table class="table tablesorter">
+                <table *ngIf="category.products.length" class="table tablesorter">
                     <thead class=" text-primary">
                         <tr>
                             <th>
