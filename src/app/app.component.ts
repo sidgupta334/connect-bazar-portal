@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Grocerica-portal';
+  title = 'Connect-Bazar-portal';
 
   constructor(private http: HttpClient) { }
   callApi() {

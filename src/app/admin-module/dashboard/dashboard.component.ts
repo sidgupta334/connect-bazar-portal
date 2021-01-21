@@ -101,6 +101,7 @@ export class DashboardComponent implements OnInit {
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("email");
+    sessionStorage.removeItem("vendorId");
     this.router.navigate([""]);
   }
 }
