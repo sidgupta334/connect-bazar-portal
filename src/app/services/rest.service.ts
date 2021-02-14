@@ -62,6 +62,7 @@ export class RestService {
   DELIVERY_USERS_ALL = "/delivery/users/all";
   DELIVERY_USERS_VENDOR = "/delivery/users/vendor";
   GET_ALL_VENDORS = "/users/vendors/all";
+  ADD_SERVICE_CHARGE = "/order/serviceCharge/";
 
   constructor(private http: HttpClient) {}
 
@@ -335,6 +336,11 @@ export class RestService {
 
   public getAllVendorUsers() {
     let url = this.SERVER.concat(this.GET_ALL_VENDORS);
+    return this.http.get(url);
+  }
+
+  public addServiceCharge(orderId, serviceCharge) {
+    let url = this.SERVER.concat(this.ADD_SERVICE_CHARGE, orderId, '/', serviceCharge);
     return this.http.get(url);
   }
 }

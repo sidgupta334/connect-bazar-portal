@@ -169,7 +169,7 @@
 
 
 <div class="modal fade model-config" id="dishesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" style="top:-100px" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">ORDERED ITEMS</h3>
@@ -213,7 +213,8 @@
                     </div>
                     <div class="col-4">
                         <select [(ngModel)]="selectedVendor" (change)="mapAddress($event.target.value)" class="form-control modal-input" name="vendorName" id="vendorName">
-                            <option *ngFor="let item of deliveryPartnerList" [value]="item.deliveryUserId"> {{item.fullName}}</option>
+                            <option *ngFor="let item of deliveryPartnerList" [value]="item.deliveryUserId">
+                                {{item.fullName}}</option>
                         </select> &nbsp;
                     </div>
 
@@ -222,10 +223,18 @@
                     </div>
 
                 </div>
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-4">
+                        Enter service charge:
+                    </div>
+                    <div class="col-4">
+                        <input type="number" maxlength="4" class="form-control modal-input" name="serviceCharge" [(ngModel)]="serviceCharge">
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-6"></div>
                     <div class="col-3">
-                        <button [disabled]="!selectedVendor" (click)="mapVendor()" type="button" class="btn btn-primary">Save</button> &nbsp;
+                        <button [disabled]="!selectedVendor || !serviceCharge" (click)="mapVendor()" data-dismiss="modal" type="button" class="btn btn-primary">Save</button> &nbsp;
                     </div>
                     <div class="col-3">
                         <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
@@ -359,6 +368,12 @@
 
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col report-text ">
+                            <h6 style="color: black; text-align: right;margin-right: 20px;"> SERVICE CHARGE: ₹ {{report.serviceCharge}} </h6>
+
+                        </div>
+                    </div>
 
                     <p style="color: black; width: 96%; margin-left: 2%; margin-right: 2%; font-size: smaller;">
                         This price is included of all the taxes and deduction of price by any promotion code applied at the time of order.
@@ -462,6 +477,12 @@
             <div class="row">
                 <div class="col report-text ">
                     <h6 style="color: black; text-align: right;margin-right: 20px;"> DISCOUNT RECEIVED: ₹ {{report.discountApplied}} </h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col report-text ">
+                    <h6 style="color: black; text-align: right;margin-right: 20px;"> SERVICE CHARGE: ₹ {{report.serviceCharge}} </h6>
+
                 </div>
             </div>
             <div class="row">

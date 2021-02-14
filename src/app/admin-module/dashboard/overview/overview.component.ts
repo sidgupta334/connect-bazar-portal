@@ -36,6 +36,7 @@ export class OverviewComponent implements OnInit {
     loaded: false,
   };
   addressUrl: any = "";
+  serviceCharge: any = "";
 
   constructor(
     private rest: RestService,
@@ -132,26 +133,43 @@ export class OverviewComponent implements OnInit {
     this.quantitiesList = item.quantities;
     this.selectedOrder = item.orderId;
     this.selectedVendor = item.mappedTo;
+    this.serviceCharge = item.serviceCharge;
     if (this.selectedVendor) {
       this.mapAddress(this.selectedVendor);
     }
   }
 
-  mapVendor() {
+  async mapVendor() {
     this.rest
       .mapOrderToVendor(this.selectedOrder, this.selectedVendor)
       .subscribe(
         (res: any) => {
-          this.vendorId
-            ? this.updateStatusTableVendor()
-            : this.updateStatusTable();
+          this.rest
+            .addServiceCharge(this.selectedOrder, this.serviceCharge)
+            .subscribe(
+              (res2: any) => {
+                this.vendorId
+                  ? this.updateStatusTableVendor()
+                  : this.updateStatusTable();
+                
+                this.getSalesDetails();
 
-          Swal.fire({
-            title: "Success!",
-            text: "Order mapped successfully",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
+                Swal.fire({
+                  title: "Success!",
+                  text: "Order mapped successfully",
+                  icon: "success",
+                  confirmButtonText: "OK",
+                });
+              },
+              (err) => {
+                Swal.fire({
+                  title: "Error!",
+                  text: "Unable to add service charge",
+                  icon: "error",
+                  confirmButtonText: "OK",
+                });
+              }
+            );
         },
         (err) => {
           Swal.fire({
@@ -221,7 +239,9 @@ export class OverviewComponent implements OnInit {
   }
 
   mapAddress(vendorId) {
-    let vendor = _.find(this.deliveryPartnerList, { deliveryUserId: Number(vendorId) });
+    let vendor = _.find(this.deliveryPartnerList, {
+      deliveryUserId: Number(vendorId),
+    });
     let order = _.find(this.ordersList, {
       orderId: Number(this.selectedOrder),
     });
@@ -304,6 +324,7 @@ ${this._ensureSafeDelivery(order)}`;
       total_amount: item.finalTotal,
       paymentMethod: item.paymentMethod,
       discountApplied: item.discountApplied,
+      serviceCharge: item.serviceCharge,
       loaded: true,
     };
     setTimeout(() => {

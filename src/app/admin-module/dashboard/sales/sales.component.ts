@@ -212,6 +212,7 @@ export class SalesComponent implements OnInit {
       total_amount: item.finalTotal,
       paymentMethod: item.paymentMethod,
       discountApplied: item.discountApplied,
+      serviceCharge: item.serviceCharge,
       loaded: true,
     };
     this.selectedOrder = item;
