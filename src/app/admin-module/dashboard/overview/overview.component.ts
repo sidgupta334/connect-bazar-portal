@@ -325,10 +325,17 @@ ${this._ensureSafeDelivery(order)}`;
       paymentMethod: item.paymentMethod,
       discountApplied: item.discountApplied,
       serviceCharge: item.serviceCharge,
+      cgst: (this._calculateGST(item.finalTotal)/2).toFixed(2),
+      sgst: (this._calculateGST(item.finalTotal)/2).toFixed(2),
       loaded: true,
     };
     setTimeout(() => {
       this.utilsService.print("print-bill1", "Care Mother Bill");
     }, 0);
+  }
+
+  _calculateGST(total: any) {
+    let basePrice: any = ((total*100)/105).toFixed(2);
+    return total - basePrice;
   }
 }

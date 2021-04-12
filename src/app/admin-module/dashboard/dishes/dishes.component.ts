@@ -12,6 +12,7 @@ import { Router } from "@angular/router";
 })
 export class DishesComponent implements OnInit {
   p: any;
+  searchRecord: any;
   productHierarchy: any = [];
   allVendors: any = [];
   vendorId: any = null;

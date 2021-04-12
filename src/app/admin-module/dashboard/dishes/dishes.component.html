@@ -1,5 +1,8 @@
 <div class="row">
     <div class="col-6">
+        <input class="form-control customSearch" type="text" placeholder="Search Product" name="search" [(ngModel)]="searchRecord">
+    </div>
+    <div class="col-6">
         <button (click)="addDIshModalOpen()" data-toggle="modal" data-target="#dishesModal" data-backdrop="static" data-keyboard="false" class="btn btn-primary btn-round animation-on-hover">Add New Product</button>
     </div>
 </div>
@@ -16,10 +19,12 @@
 
                     <div class="col-lg-6">
 
-                        <span (click)="deleteCategory(category.categoryId)" style="margin-left: 20px; cursor: pointer;" class="pull-right"> <i class="tim-icons icon-simple-remove" data-toggle="tooltip" title="Remove Category"></i>
+                        <span (click)="deleteCategory(category.categoryId)" style="margin-left: 20px; cursor: pointer;" class="pull-right"> <i class="tim-icons icon-simple-remove" data-toggle="tooltip"
+                                title="Remove Category"></i>
                         </span>
 
-                        <span class="pull-right" data-toggle="modal" data-target="#categoryModal2" data-backdrop="static" data-keyboard="false" (click)="updateCategory(category)" style="cursor: pointer;"> <i class="tim-icons icon-pencil" data-toggle="tooltip" title="Edit Category"></i>
+                        <span class="pull-right" data-toggle="modal" data-target="#categoryModal2" data-backdrop="static" data-keyboard="false" (click)="updateCategory(category)" style="cursor: pointer;"> <i class="tim-icons icon-pencil" data-toggle="tooltip"
+                                title="Edit Category"></i>
                         </span>
                     </div>
                 </div>
@@ -53,7 +58,7 @@
                             </th>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let product of category.products; let i = index">
+                        <tr *ngFor="let product of category.products | filter: searchRecord; let i = index">
 
                             <td>
                                 {{i + 1}}
@@ -71,7 +76,8 @@
                             </td>
                             <td class="text-center">
                                 <label class="switch">
-                                    <input type="checkbox" (click)="toggleChanged(product)" [checked]="product.available ? true : false">
+                                    <input type="checkbox" (click)="toggleChanged(product)"
+                                        [checked]="product.available ? true : false">
                                     <span class="slider round"></span>
                                 </label>
                             </td>
@@ -82,11 +88,13 @@
 
                             <td class="text-center">
                                 <span (click)="updateproductClicked(category,product)" data-toggle="modal" data-target="#productesUpdateModal" data-backdrop="static" data-keyboard="false">
-                                      
-                                      <i class="tim-icons icon-pencil" style="cursor: pointer;" data-toggle="tooltip" title="Edit product"></i></span> &nbsp;
+
+                                    <i class="tim-icons icon-pencil" style="cursor: pointer;" data-toggle="tooltip"
+                                        title="Edit product"></i></span> &nbsp;
                                 <span>
-                                    <i (click)="deleteproduct(product)" style="cursor: pointer;" data-toggle="tooltip" title="Remove product" class="tim-icons icon-simple-remove"></i>
-                                 </span>
+                                    <i (click)="deleteproduct(product)" style="cursor: pointer;" data-toggle="tooltip"
+                                        title="Remove product" class="tim-icons icon-simple-remove"></i>
+                                </span>
                             </td>
 
                         </tr>
@@ -102,7 +110,7 @@
             <div data-toggle="modal" data-target="#categoryModal" data-backdrop="static" data-keyboard="false" (click)="openCategoryModal()" style="cursor: pointer; height: 460px;" class="flex-container">
                 <i style="font-size: 48px" class="tim-icons icon-simple-add"></i>
                 <br>
-                <span> ADD NEW CATEGORY  </span>
+                <span> ADD NEW CATEGORY </span>
             </div>
         </div>
     </div>
@@ -119,8 +127,8 @@
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">Add Product</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-          <i class="tim-icons icon-simple-remove"></i>
-        </button>
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <form [formGroup]="productForm">
@@ -152,26 +160,29 @@
                     <div class="form-group">
                         <label for="category">Select Product Category</label>
                         <select class="form-control modal-input" formControlName="categoryId" id="category">
-                              <option *ngFor="let category of productHierarchy; let i = index" [value]="productHierarchy[i].categoryId">    
-                                    {{ productHierarchy[i].categoryName }}        
-                              </option>
+                            <option *ngFor="let category of productHierarchy; let i = index"
+                                [value]="productHierarchy[i].categoryId">
+                                {{ productHierarchy[i].categoryName }}
+                            </option>
                         </select>
                     </div>
                     <div *ngIf="!vendorId" class="form-group">
                         <label for="Vendor">Select Vendor</label>
                         <select class="form-control modal-input" formControlName="vendorId" id="Vendor">
-                              <option *ngFor="let vendor of allVendors; let i = index" [value]="allVendors[i].userId">    
-                                    {{ allVendors[i].fullName }}        
-                              </option>
+                            <option *ngFor="let vendor of allVendors; let i = index" [value]="allVendors[i].userId">
+                                {{ allVendors[i].fullName }}
+                            </option>
                         </select>
                     </div>
                     <br>
                     <div class="form-group">
                         <label class="upload-custom" for="uploadImage">Click here to Upload Image</label>
                         <input (change)="onSelectedFile($event)" type="file" name="file" accept="image/png,image/jpeg" />
-                        <span *ngIf="productForm.value.uploadImage && !fileError"> File Selected: {{productForm.value.uploadImage.name}} </span>
+                        <span *ngIf="productForm.value.uploadImage && !fileError"> File Selected:
+                            {{productForm.value.uploadImage.name}} </span>
                         <br>
-                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only less than 300 KB.</small>
+                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only less than
+                            300 KB.</small>
                     </div>
                 </form>
 
@@ -199,8 +210,8 @@
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">Update Product</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-          <i class="tim-icons icon-simple-remove"></i>
-        </button>
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <form [formGroup]="productForm2">
@@ -232,18 +243,19 @@
                     <div class="form-group">
                         <label for="category">Select Product Category</label>
                         <select class="form-control modal-input" formControlName="categoryId" id="category">
-                              <option *ngFor="let category of productHierarchy; let i = index" [value]="productHierarchy[i].categoryId">    
-                                    {{ productHierarchy[i].categoryName }}        
-                              </option>
+                            <option *ngFor="let category of productHierarchy; let i = index"
+                                [value]="productHierarchy[i].categoryId">
+                                {{ productHierarchy[i].categoryName }}
+                            </option>
                         </select>
                     </div>
 
                     <div *ngIf="!vendorId" class="form-group s">
                         <label for="Vendor">Select Vendor</label>
                         <select class="form-control modal-input" formControlName="vendorId" id="Vendor">
-                              <option *ngFor="let vendor of allVendors; let i = index" [value]="allVendors[i].userId">    
-                                    {{ allVendors[i].fullName }}        
-                              </option>
+                            <option *ngFor="let vendor of allVendors; let i = index" [value]="allVendors[i].userId">
+                                {{ allVendors[i].fullName }}
+                            </option>
                         </select>
                     </div>
 
@@ -251,9 +263,11 @@
                     <div class="form-group">
                         <label class="upload-custom" for="uploadImage">Click here to Upload Image</label>
                         <input (change)="onSelectedFile2($event)" type="file" name="file" accept="image/png,image/jpeg" />
-                        <span *ngIf="productForm2.value.uploadImage.name && !fileError"> File Selected: {{productForm2.value.uploadImage.name}} </span>
+                        <span *ngIf="productForm2.value.uploadImage && !fileError"> File Selected:
+                            {{productForm2.value.uploadImage.name}} </span>
                         <br>
-                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only less than 300 KB.</small>
+                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only less than
+                            300 KB.</small>
                     </div>
                 </form>
 
@@ -278,8 +292,8 @@
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">Add Product Category</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-          <i class="tim-icons icon-simple-remove"></i>
-        </button>
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
             </div>
             <div class="modal-body">
 
@@ -292,9 +306,11 @@
                     <div class="form-group">
                         <label class="upload-custom" for="uploadImage">Click here to Upload Image</label>
                         <input (change)="onSelectedFile3($event)" type="file" name="file" accept="image/png,image/jpeg" />
-                        <span *ngIf="categoryForm.value.uploadImage.name && !fileError"> File Selected: {{categoryForm.value.uploadImage.name}} </span>
+                        <span *ngIf="categoryForm?.value.uploadImage && !fileError"> File Selected:
+                            {{categoryForm.value.uploadImage.name}} </span>
                         <br>
-                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only with size less than 300 KB.</small>
+                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only with size
+                            less than 300 KB.</small>
                     </div>
                 </form>
             </div>
@@ -316,8 +332,8 @@
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">Update Dish Category</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-          <i class="tim-icons icon-simple-remove"></i>
-        </button>
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
             </div>
             <div class="modal-body">
 

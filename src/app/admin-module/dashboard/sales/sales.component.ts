@@ -86,7 +86,6 @@ export class SalesComponent implements OnInit {
     private utils: UtilsService,
     private rest: RestService,
     private formBuilder: FormBuilder
-
   ) {}
 
   async ngOnInit() {
@@ -120,8 +119,8 @@ export class SalesComponent implements OnInit {
   onFilterSelected(filterValue) {
     this.selectedFilter = filterValue;
     this.paymentFilter = "COD";
-    if(this.dropdownForm) {
-          this.dropdownForm.value.dropdown = "COD";
+    if (this.dropdownForm) {
+      this.dropdownForm.value.dropdown = "COD";
     }
   }
 
@@ -154,7 +153,7 @@ export class SalesComponent implements OnInit {
       this.chartData.forEach((data) => {
         if (type == data.type) {
           this.barChartLabels = data.labels;
-          this.barChartData[0].label = 'Amount in ₹';
+          this.barChartData[0].label = "Amount in ₹";
           this.barChartData[0].data = data.data;
         }
       });
@@ -213,15 +212,22 @@ export class SalesComponent implements OnInit {
       paymentMethod: item.paymentMethod,
       discountApplied: item.discountApplied,
       serviceCharge: item.serviceCharge,
+      cgst: (this._calculateGST(item.finalTotal) / 2).toFixed(2),
+      sgst: (this._calculateGST(item.finalTotal) / 2).toFixed(2),
       loaded: true,
     };
     this.selectedOrder = item;
   }
 
+  _calculateGST(total: any) {
+    let basePrice: any = ((total * 100) / 105).toFixed(2);
+    return total - basePrice;
+  }
+
   printBill() {
     this.generateBill(this.selectedOrder);
-     setTimeout(()=> {
-          this.utils.print("print-bill1", "Care Mother Bill");
-    },0);
+    setTimeout(() => {
+      this.utils.print("print-bill1", "Care Mother Bill");
+    }, 0);
   }
 }

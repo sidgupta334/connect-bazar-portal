@@ -6,8 +6,9 @@ import { HttpClient } from "@angular/common/http";
 })
 export class RestService {
   // private SERVER: String = "http://13.234.174.149:8080";
-  // private SERVER: string = "http://localhost:8080";
+  // private SERVER: string = "http://ec2-3-140-91-142.us-east-2.compute.amazonaws.com:8080";
    private SERVER: string = "https://connect-it-api.herokuapp.com";
+  // private SERVER = "http://localhost:8080";
    
   LOGIN: string = "/users/login";
   LOGOUT: string = "/users/logout";
