@@ -6,11 +6,11 @@ import * as _ from "lodash";
 import { Router } from "@angular/router";
 
 @Component({
-  selector: "app-dishes",
-  templateUrl: "./dishes.component.html",
-  styleUrls: ["./dishes.component.css"],
+  selector: "app-products",
+  templateUrl: "./products.component.html",
+  styleUrls: ["./products.component.css"],
 })
-export class DishesComponent implements OnInit {
+export class ProductsComponent implements OnInit {
   p: any;
   searchRecord: any;
   productHierarchy: any = [];
@@ -22,7 +22,7 @@ export class DishesComponent implements OnInit {
   categoryForm2: FormGroup;
   productId: any = null;
   categoryId: any = null;
-
+  subCategories: any;
   fileError: boolean = false;
 
   constructor(
@@ -39,7 +39,7 @@ export class DishesComponent implements OnInit {
       ? sessionStorage.getItem("vendorId")
       : null;
 
-    if(!this.vendorId) {
+    if (!this.vendorId) {
       this.getAllVendors();
     }
     this.updateData();
@@ -54,6 +54,7 @@ export class DishesComponent implements OnInit {
       brand: ["", Validators.compose([Validators.required])],
       productDescription: ["", Validators.compose([Validators.required])],
       categoryId: ["", Validators.compose([Validators.required])],
+      subCategoryId: ["", Validators.compose([Validators.required])],
       vendorId: ["", Validators.compose([Validators.required])],
       uploadImage: ["", Validators.compose([Validators.required])],
     });
@@ -68,6 +69,7 @@ export class DishesComponent implements OnInit {
       brand: ["", Validators.compose([Validators.required])],
       productDescription: ["", Validators.compose([Validators.required])],
       categoryId: ["", Validators.compose([Validators.required])],
+      subCategoryId: ["", Validators.compose([Validators.required])],
       vendorId: ["", Validators.compose([Validators.required])],
       uploadImage: [""],
     });
@@ -90,8 +92,18 @@ export class DishesComponent implements OnInit {
   }
 
   getAllVendors() {
-    this.rest.getAllVendorUsers().subscribe(res => {
+    this.rest.getAllVendorUsers().subscribe((res) => {
       this.allVendors = res;
+    });
+  }
+
+  getSubCategoriesDropDown(e) {
+    this.getSubCategoriesOfCategory(e.target.value);
+  }
+
+  getSubCategoriesOfCategory(categoryId) {
+    this.rest.getSubCategoriesFromCategory(categoryId).subscribe((res) => {
+      this.subCategories = res;
     });
   }
 
@@ -103,6 +115,7 @@ export class DishesComponent implements OnInit {
           return {
             categoryId: c.categoryId,
             categoryName: c.categoryName,
+            url: c.url,
             products: [],
           };
         });
@@ -137,6 +150,7 @@ export class DishesComponent implements OnInit {
 
   //Method which is called whenever product is updated:
   updateproductClicked(category, product) {
+    this.getSubCategoriesOfCategory(category.categoryId);
     this.productForm2.patchValue({
       productName: product.productName,
       newPrice: product.newPrice,
@@ -144,6 +158,7 @@ export class DishesComponent implements OnInit {
       brand: product.brand,
       productDescription: product.productDescription,
       categoryId: category.categoryId.toString(),
+      subCategoryId: product.subCategoryId.toString(),
       vendorId: product.vendorId.toString(),
       uploadImage: "",
     });
@@ -162,6 +177,7 @@ export class DishesComponent implements OnInit {
         brand: this.productForm2.value.brand,
         productDescription: this.productForm2.value.productDescription,
         categoryId: Number(this.productForm2.value.categoryId),
+        subCategoryId: Number(this.productForm2.value.subCategoryId),
         vendorId: this.vendorId
           ? Number(this.vendorId)
           : Number(this.productForm2.value.vendorId),
@@ -185,6 +201,7 @@ export class DishesComponent implements OnInit {
             brand: this.productForm2.value.brand,
             productDescription: this.productForm2.value.productDescription,
             categoryId: Number(this.productForm2.value.categoryId),
+            subCategoryId: Number(this.productForm2.value.subCategoryId),
             vendorId: this.vendorId
               ? Number(this.vendorId)
               : Number(this.productForm2.value.vendorId),
@@ -222,9 +239,10 @@ export class DishesComponent implements OnInit {
           brand: this.productForm.value.brand,
           productDescription: this.productForm.value.productDescription,
           categoryId: Number(this.productForm.value.categoryId),
+          subCategoryId: Number(this.productForm.value.subCategoryId),
           vendorId: this.vendorId
-              ? Number(this.vendorId)
-              : Number(this.productForm.value.vendorId),
+            ? Number(this.vendorId)
+            : Number(this.productForm.value.vendorId),
           productName: this.productForm.value.productName,
           imgId: res.imgId,
         };

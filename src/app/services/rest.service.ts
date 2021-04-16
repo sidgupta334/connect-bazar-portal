@@ -64,6 +64,10 @@ export class RestService {
   DELIVERY_USERS_VENDOR = "/delivery/users/vendor";
   GET_ALL_VENDORS = "/users/vendors/all";
   ADD_SERVICE_CHARGE = "/order/serviceCharge/";
+  GET_ALL_SUB_CATEGORIES = "/subCategory/getAll";
+  CREATE_SUB_CATEGORY = "/subCategory/create";
+  DELETE_SUB_CATEGORY = "/subCategory/remove/";
+  GET_SUB_CATEGORIES_FROM_CATEGORY = "/subCategory/get/";
 
   constructor(private http: HttpClient) {}
 
@@ -342,6 +346,26 @@ export class RestService {
 
   public addServiceCharge(orderId, serviceCharge) {
     let url = this.SERVER.concat(this.ADD_SERVICE_CHARGE, orderId, '/', serviceCharge);
+    return this.http.get(url);
+  }
+
+  public getAllSubCategories() {
+    let url = this.SERVER.concat(this.GET_ALL_SUB_CATEGORIES);
+    return this.http.get(url);
+  }
+
+  public createNewSubCategory(dto) {
+    let url = this.SERVER.concat(this.CREATE_SUB_CATEGORY);
+    return this.http.post(url, dto);
+  }
+
+  public deleteSubCategory(subCategoryId: number) {
+    let url = this.SERVER.concat(this.DELETE_SUB_CATEGORY, subCategoryId.toString());
+    return this.http.delete(url);
+  }
+
+  public getSubCategoriesFromCategory(categoryId: number) {
+    const url = this.SERVER.concat(this.GET_SUB_CATEGORIES_FROM_CATEGORY, categoryId.toString());
     return this.http.get(url);
   }
 }

@@ -3,55 +3,63 @@
         <div class="sidebar-wrapper">
             <div class="logo">
                 <span class="simple-text logo-normal">
-                              CONNECT PORTAL
-                        </span>
+                    CONNECT PORTAL
+                </span>
             </div>
             <ul class="nav">
-                <li [ngClass]="{active: activeClasses[0]}">
+                <li [ngClass]="{active: navItems.OVERVIEW.isActive}">
                     <a (click)="navigateSubMenu('overview')">
                         <i class="tim-icons icon-chart-pie-36"></i>
                         <p>Overview</p>
                     </a>
                 </li>
-                <li [ngClass]="{active: activeClasses[6]}">
+                <li [ngClass]="{active: navItems.SALES.isActive}">
                     <a (click)="navigateSubMenu('sales')">
                         <i class=" tim-icons icon-coins "></i>
                         <p>Sales</p>
                     </a>
                 </li>
 
-                <li [ngClass]="{active: activeClasses[2]}">
+                <li *ngIf="!vendorId" [ngClass]="{active: navItems.CATEGORIES.isActive}">
+                    <a (click)="navigateSubMenu('categories')">
+                        <i class="tim-icons icon-vector"></i>
+                        <p>Categories</p>
+                    </a>
+                </li>
+
+                <li [ngClass]="{active: navItems.PRODUCTS.isActive}">
                     <a (click)="navigateSubMenu('products')">
                         <i class="tim-icons icon-cart"></i>
                         <p>Products</p>
                     </a>
                 </li>
-                <li *ngIf="!vendorId" [ngClass]="{active: activeClasses[1]}">
+
+                <li *ngIf="!vendorId" [ngClass]="{active: navItems.USERS.isActive}">
                     <a (click)="navigateSubMenu('users')">
                         <i class="tim-icons icon-single-02"></i>
                         <p>Users Management</p>
                     </a>
                 </li>
 
-                <li *ngIf="!vendorId" [ngClass]="{active: activeClasses[4]}">
+                <li *ngIf="!vendorId" [ngClass]="{active: navItems.BANNERS.isActive}">
                     <a (click)="navigateSubMenu('banners')">
                         <i class="tim-icons icon-puzzle-10"></i>
                         <p>Banners</p>
                     </a>
                 </li>
-                <li [ngClass]="{active: activeClasses[5]}">
+                <li [ngClass]="{active: navItems.COUPONS.isActive}">
                     <a (click)="navigateSubMenu('coupons')">
                         <i class=" tim-icons icon-credit-card "></i>
                         <p>Coupons</p>
                     </a>
                 </li>
-                <li *ngIf="!vendorId" [ngClass]="{active: activeClasses[7]}">
+                <li *ngIf="!vendorId" [ngClass]="{active: navItems.PINCODES.isActive}">
                     <a (click)="navigateSubMenu('pincodes')">
                         <i class=" tim-icons icon-globe-2"></i>
                         <p>Pin Codes</p>
                     </a>
                 </li>
-                <li [ngClass]="{active: activeClasses[8]}">
+                <li [ngClass]="{active: navItems.DELIVERY_PARTNERS.isActive}">
                     <a (click)="navigateSubMenu('deliveryPartners')">
                         <i class=" tim-icons icon-delivery-fast"></i>
                         <p>Delivery Partners</p>
@@ -69,19 +77,19 @@
                 <div class="navbar-wrapper ">
                     <div class="navbar-toggle d-inline ">
                         <button type="button " class="navbar-toggler ">
-                                          <span class="navbar-toggler-bar bar1 "></span>
-                                          <span class="navbar-toggler-bar bar2 "></span>
-                                          <span class="navbar-toggler-bar bar3 "></span>
-                                    </button>
+                            <span class="navbar-toggler-bar bar1 "></span>
+                            <span class="navbar-toggler-bar bar2 "></span>
+                            <span class="navbar-toggler-bar bar3 "></span>
+                        </button>
                     </div>
                     <a *ngIf="vendorId" class="navbar-brand " href="javascript:void(0) "> VENDOR AREA</a>
                     <a *ngIf="!vendorId" class="navbar-brand " href="javascript:void(0) "> ADMIN AREA</a>
                 </div>
                 <button class="navbar-toggler " type="button " data-toggle="collapse " data-target="#navigation " aria-expanded="false " aria-label="Toggle navigation ">
-                              <span class="navbar-toggler-bar navbar-kebab "></span>
-                              <span class="navbar-toggler-bar navbar-kebab "></span>
-                              <span class="navbar-toggler-bar navbar-kebab "></span>
-                        </button>
+                    <span class="navbar-toggler-bar navbar-kebab "></span>
+                    <span class="navbar-toggler-bar navbar-kebab "></span>
+                    <span class="navbar-toggler-bar navbar-kebab "></span>
+                </button>
                 <div class="collapse navbar-collapse " id="navigation ">
                     <ul class="navbar-nav ml-auto ">
                         <li class="dropdown nav-item date-time ">

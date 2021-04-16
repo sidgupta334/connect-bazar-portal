@@ -8,24 +8,13 @@
 </div>
 <br><br>
 <div class="row">
-    <div *ngFor="let category of productHierarchy; let i = index" class="col-6">
+    <div *ngFor="let category of productHierarchy; let i = index" class="col-12">
         <div class="card">
             <div class="card-header dish-header">
 
                 <div class="row">
-                    <div class="col-lg-6">
-                        <h4 class="card-title"> {{category.categoryName | uppercase}} </h4>
-                    </div>
-
-                    <div class="col-lg-6">
-
-                        <span (click)="deleteCategory(category.categoryId)" style="margin-left: 20px; cursor: pointer;" class="pull-right"> <i class="tim-icons icon-simple-remove" data-toggle="tooltip"
-                                title="Remove Category"></i>
-                        </span>
-
-                        <span class="pull-right" data-toggle="modal" data-target="#categoryModal2" data-backdrop="static" data-keyboard="false" (click)="updateCategory(category)" style="cursor: pointer;"> <i class="tim-icons icon-pencil" data-toggle="tooltip"
-                                title="Edit Category"></i>
-                        </span>
+                    <div class="col-lg-12">
+                        <h4 class="card-title"> {{category.categoryName | uppercase}} <img [src]="category.url" width="30" height="30"> </h4>
                     </div>
                 </div>
 
@@ -40,6 +29,9 @@
                             </th>
                             <th>
                                 Product Name
+                            </th>
+                            <th>
+                                Sub-category
                             </th>
                             <th class="text-center">
                                 Base Price
@@ -66,6 +58,9 @@
 
                             <td>
                                 {{product.productName}}
+                            </td>
+                            <td>
+                                {{product.subCategoryName}}
                             </td>
                             <td class="text-center">
                                 ₹ {{product.newPrice}}
@@ -100,19 +95,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="no-products" *ngIf="!category.products.length">NO PRODUCTS IN THIS CATEGORY</div>
             </div>
         </div>
 
-    </div>
-
-    <div *ngIf="!vendorId" class="col-lg-6">
-        <div class="card">
-            <div data-toggle="modal" data-target="#categoryModal" data-backdrop="static" data-keyboard="false" (click)="openCategoryModal()" style="cursor: pointer; height: 460px;" class="flex-container">
-                <i style="font-size: 48px" class="tim-icons icon-simple-add"></i>
-                <br>
-                <span> ADD NEW CATEGORY </span>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -122,7 +108,7 @@
 <!-- -------------------------------Products Modal ------------------------------------->
 <!-- Save Modal -->
 <div class="modal fade model-config" id="dishesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="top: -200px">
+    <div class="modal-dialog" role="document" style="top: -250px">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">Add Product</h3>
@@ -159,10 +145,20 @@
 
                     <div class="form-group">
                         <label for="category">Select Product Category</label>
-                        <select class="form-control modal-input" formControlName="categoryId" id="category">
+                        <select class="form-control modal-input" formControlName="categoryId" (change)="getSubCategoriesDropDown($event)" id="category">
                             <option *ngFor="let category of productHierarchy; let i = index"
                                 [value]="productHierarchy[i].categoryId">
                                 {{ productHierarchy[i].categoryName }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subCategory">Select Sub Category</label>
+                        <select class="form-control modal-input" formControlName="subCategoryId" id="subCategory">
+                            <option *ngFor="let subCategory of subCategories; let i = index"
+                                [value]="subCategories[i].subCategoryId">
+                                {{ subCategories[i].subCategoryName }}
                             </option>
                         </select>
                     </div>
@@ -189,7 +185,6 @@
             </div>
 
             <div class="modal-footer">
-
                 <button (click)="addProduct()" [disabled]="!productForm.valid || fileError" type="submit" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -205,7 +200,7 @@
 <!--------------- Update modal -------------------->
 
 <div class="modal fade model-config" id="productesUpdateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" style="top: -250px">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="exampleModalLabel">Update Product</h3>
@@ -242,10 +237,20 @@
 
                     <div class="form-group">
                         <label for="category">Select Product Category</label>
-                        <select class="form-control modal-input" formControlName="categoryId" id="category">
+                        <select class="form-control modal-input" formControlName="categoryId" (change)="getSubCategoriesDropDown($event)" id="category">
                             <option *ngFor="let category of productHierarchy; let i = index"
                                 [value]="productHierarchy[i].categoryId">
                                 {{ productHierarchy[i].categoryName }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subCategory">Select Sub Category</label>
+                        <select class="form-control modal-input" formControlName="subCategoryId" id="subCategory">
+                            <option *ngFor="let subCategory of subCategories; let i = index"
+                                [value]="subCategories[i].subCategoryId">
+                                {{ subCategories[i].subCategoryName }}
                             </option>
                         </select>
                     </div>
@@ -279,77 +284,6 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
 
-        </div>
-    </div>
-</div>
-
-
-<!----------------------------------- Create category modal------------------------- -->
-<!-- Save Modal -->
-<div class="modal fade model-config" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Add Product Category</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="tim-icons icon-simple-remove"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <form [formGroup]="categoryForm">
-
-                    <div class="form-group">
-                        <label for="dishName">Dish Category Name</label>
-                        <input id="dishName" type="text" formControlName="categoryName" class="form-control modal-input" placeholder="Enter Category Name">
-                    </div>
-                    <div class="form-group">
-                        <label class="upload-custom" for="uploadImage">Click here to Upload Image</label>
-                        <input (change)="onSelectedFile3($event)" type="file" name="file" accept="image/png,image/jpeg" />
-                        <span *ngIf="categoryForm?.value.uploadImage && !fileError"> File Selected:
-                            {{categoryForm.value.uploadImage.name}} </span>
-                        <br>
-                        <small *ngIf="fileError" style="color: red;"> Please upload JPG and PNG images only with size
-                            less than 300 KB.</small>
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer">
-
-                <button (click)="saveDishCategory()" [disabled]="!categoryForm.valid || fileError" type="submit" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade model-config" id="categoryModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Update Dish Category</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="tim-icons icon-simple-remove"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <form [formGroup]="categoryForm2">
-                    <div class="form-group">
-                        <label for="dishName">Dish Category Name</label>
-                        <input id="dishName" type="text" formControlName="categoryName" class="form-control modal-input" placeholder="Enter Category Name">
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer">
-
-                <button (click)="saveDishCategory()" [disabled]="!categoryForm2.valid" type="submit" class="btn btn-primary" data-dismiss="modal">SAVE</button> &nbsp;
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
         </div>
     </div>
 </div>

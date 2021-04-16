@@ -10,3 +10,11 @@
 .logout {
     cursor: pointer;
 }
+
+.active {
+    background-color: rgb(1, 52, 87);
+}
+
+.sidebar .nav li>a {
+    margin: 5px 15px 0;
+}

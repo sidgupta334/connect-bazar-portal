@@ -13,7 +13,8 @@ import { MyDatePickerModule } from "mydatepicker";
 import { ChartsModule } from "ng2-charts";
 import { NgxPrintModule } from "ngx-print";
 
-import { DishesComponent } from "./dashboard/dishes/dishes.component";
+import { CategoriesComponent } from "./dashboard/categories/categories.component";
+import { ProductsComponent } from "./dashboard/products/products.component";
 import { BannersComponent } from "./dashboard/banners/banners.component";
 import { CouponsComponent } from "./dashboard/coupons/coupons.component";
 import { SalesComponent } from "./dashboard/sales/sales.component";
@@ -29,7 +30,8 @@ const routes: Routes = [
       { path: "users", component: UsersComponent },
       { path: "deliveryPartners", component: DeliveryPartnersComponent },
       { path: "overview", component: OverviewComponent },
-      { path: "products", component: DishesComponent },
+      { path: "categories", component: CategoriesComponent },
+      { path: "products", component: ProductsComponent },
       { path: "banners", component: BannersComponent },
       { path: "coupons", component: CouponsComponent },
       { path: "sales", component: SalesComponent },
@@ -45,7 +47,8 @@ const routes: Routes = [
     UsersComponent,
     DeliveryPartnersComponent,
     OverviewComponent,
-    DishesComponent,
+    CategoriesComponent,
+    ProductsComponent,
     BannersComponent,
     CouponsComponent,
     SalesComponent,

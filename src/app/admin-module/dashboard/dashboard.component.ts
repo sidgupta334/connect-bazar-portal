@@ -3,6 +3,45 @@ import { UtilsService } from "src/app/services/utils.service";
 import { Router } from "@angular/router";
 import { RestService } from "src/app/services/rest.service";
 
+const NAV_ITEMS = {
+  OVERVIEW: {
+    path: "overview",
+    isActive: false,
+  },
+  SALES: {
+    path: "sales",
+    isActive: false,
+  },
+  CATEGORIES: {
+    path: "categories",
+    isActive: false,
+  },
+  PRODUCTS: {
+    path: "products",
+    isActive: false,
+  },
+  USERS: {
+    path: "users",
+    isActive: false,
+  },
+  BANNERS: {
+    path: "banners",
+    isActive: false,
+  },
+  COUPONS: {
+    path: "coupons",
+    isActive: false,
+  },
+  PINCODES: {
+    path: "pincodes",
+    isActive: false,
+  },
+  DELIVERY_PARTNERS: {
+    path: "deliveryPartners",
+    isActive: false,
+  },
+};
+
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
@@ -13,6 +52,9 @@ export class DashboardComponent implements OnInit {
   tenant: string;
   vendorId: any = null;
   loggedInTime: any = new Date().toLocaleTimeString();
+
+  navItems = NAV_ITEMS;
+
   constructor(
     private utils: UtilsService,
     private router: Router,
@@ -29,66 +71,95 @@ export class DashboardComponent implements OnInit {
       : null;
 
     //Default selected settings
-    for (let i = 1; i < 9; i++) {
-      this.activeClasses.push(false);
-    }
+    this.defaultClasses();
 
     if (sessionStorage.getItem("submenu")) {
       this.navigateSubMenu(sessionStorage.getItem("submenu"));
     } else {
-      this.navigateSubMenu("overview");
+      this.navigateSubMenu(this.navItems.OVERVIEW.path);
     }
   }
 
   //Sub menu navigation
   navigateSubMenu(subMenu: string) {
-    if (subMenu == "overview") {
-      sessionStorage.setItem("submenu", "overview");
-      this.defaultClasses();
-      this.activeClasses[0] = true;
-      this.router.navigate(["dashboard", "overview"]);
-    } else if (subMenu == "users") {
-      sessionStorage.setItem("submenu", "users");
-      this.defaultClasses();
-      this.activeClasses[1] = true;
-      this.router.navigate(["dashboard", "users"]);
-    } else if (subMenu == "products") {
-      sessionStorage.setItem("submenu", "products");
-      this.defaultClasses();
-      this.activeClasses[2] = true;
-      this.router.navigate(["dashboard", "products"]);
-    } else if (subMenu == "banners") {
-      sessionStorage.setItem("submenu", "banners");
-      this.defaultClasses();
-      this.activeClasses[4] = true;
-      this.router.navigate(["dashboard", "banners"]);
-    } else if (subMenu == "coupons") {
-      sessionStorage.setItem("submenu", "coupons");
-      this.defaultClasses();
-      this.activeClasses[5] = true;
-      this.router.navigate(["dashboard", "coupons"]);
-    } else if (subMenu == "sales") {
-      sessionStorage.setItem("submenu", "sales");
-      this.defaultClasses();
-      this.activeClasses[6] = true;
-      this.router.navigate(["dashboard", "sales"]);
-    } else if (subMenu == "pincodes") {
-      sessionStorage.setItem("submenu", "pincodes");
-      this.defaultClasses();
-      this.activeClasses[7] = true;
-      this.router.navigate(["dashboard", "pincodes"]);
-    } else if (subMenu == "deliveryPartners") {
-      sessionStorage.setItem("submenu", "deliveryPartners");
-      this.defaultClasses();
-      this.activeClasses[8] = true;
-      this.router.navigate(["dashboard", "deliveryPartners"]);
+    this.defaultClasses();
+
+    switch (subMenu) {
+      case NAV_ITEMS.OVERVIEW.path:
+        sessionStorage.setItem("submenu", this.navItems.OVERVIEW.path);
+        this.defaultClasses();
+        this.navItems.OVERVIEW.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.OVERVIEW.path]);
+        break;
+
+      case NAV_ITEMS.SALES.path:
+        sessionStorage.setItem("submenu", this.navItems.SALES.path);
+        this.defaultClasses();
+        this.navItems.SALES.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.SALES.path]);
+        break;
+
+      case NAV_ITEMS.CATEGORIES.path:
+        sessionStorage.setItem("submenu", this.navItems.CATEGORIES.path);
+        this.defaultClasses();
+        this.navItems.CATEGORIES.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.CATEGORIES.path]);
+        break;
+
+      case NAV_ITEMS.PRODUCTS.path:
+        sessionStorage.setItem("submenu", this.navItems.PRODUCTS.path);
+        this.defaultClasses();
+        this.navItems.PRODUCTS.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.PRODUCTS.path]);
+        break;
+
+      case NAV_ITEMS.USERS.path:
+        sessionStorage.setItem("submenu", this.navItems.USERS.path);
+        this.defaultClasses();
+        this.navItems.USERS.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.USERS.path]);
+        break;
+
+      case NAV_ITEMS.BANNERS.path:
+        sessionStorage.setItem("submenu", this.navItems.BANNERS.path);
+        this.defaultClasses();
+        this.navItems.BANNERS.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.BANNERS.path]);
+        break;
+
+      case NAV_ITEMS.COUPONS.path:
+        sessionStorage.setItem("submenu", this.navItems.COUPONS.path);
+        this.defaultClasses();
+        this.navItems.COUPONS.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.COUPONS.path]);
+        break;
+
+      case NAV_ITEMS.PINCODES.path:
+        sessionStorage.setItem("submenu", this.navItems.PINCODES.path);
+        this.defaultClasses();
+        this.navItems.PINCODES.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.PINCODES.path]);
+        break;
+
+      case NAV_ITEMS.DELIVERY_PARTNERS.path:
+        sessionStorage.setItem("submenu", this.navItems.DELIVERY_PARTNERS.path);
+        this.defaultClasses();
+        this.navItems.DELIVERY_PARTNERS.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.DELIVERY_PARTNERS.path]);
+        break;
+
+      default:
+        sessionStorage.setItem("submenu", this.navItems.OVERVIEW.path);
+        this.defaultClasses();
+        this.navItems.OVERVIEW.isActive = true;
+        this.router.navigate(["dashboard", this.navItems.OVERVIEW.path]);
+        break;
     }
   }
 
-  // Remove all active options
   defaultClasses() {
-    for (let i = 0; i < this.activeClasses.length; i++) {
-      this.activeClasses[i] = false;
+    for(const item in this.navItems) {
+      this.navItems[item].isActive = false;
     }
   }
 
