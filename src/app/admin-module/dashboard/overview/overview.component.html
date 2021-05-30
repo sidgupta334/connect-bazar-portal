@@ -108,7 +108,7 @@
                                     <a (click)="selectOrder(item)" data-toggle="modal" data-target="#dishesModal" data-backdrop="static" data-keyboard="false" style="cursor: pointer; text-decoration: underline;"> Click Here </a>
                                 </td>
                                 <td class="text-center">
-                                    <b>{{item.finalTotal}}</b>
+                                    <b>₹ {{item.finalTotal}}</b>
                                 </td>
                                 <td class="text-center">
                                     <span *ngIf="item.orderStatus == 'ORDERED'" style="color: yellow;">
@@ -183,25 +183,31 @@
                 </div>
                 <br>
                 <div class="row" style="border: 1px solid black;">
-                    <div class="col-6" style="border-right: 1px solid black;">
+                    <div class="col-5" style="border-right: 1px solid black;">
                         <span style="color: rgb(42, 42, 42);">PRODUCT NAME</span>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <span style="color: rgb(42, 42, 42);">QUANTITY</span>
                     </div>
                     <div class="col-3">
                         <span style="color: rgb(42, 42, 42);">BASE PRICE</span>
                     </div>
+                    <div class="col-2">
+                        <span style="color: rgb(42, 42, 42);">ACTION</span>
+                    </div>
                 </div>
                 <div *ngFor="let item of dishesList; let i = index" class="row" style="border: 1px solid black;">
-                    <div class="col-6" style="border-right: 1px solid black;">
+                    <div class="col-5" style="border-right: 1px solid black;">
                         <span style="color: rgb(42, 42, 42);">{{item.productName}} ( {{item.brand}} )</span>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <span style="color: rgb(42, 42, 42);">{{item.quantity}}</span>
                     </div>
                     <div class="col-3">
                         <span style="color: rgb(42, 42, 42);">{{item.newPrice}}</span>
+                    </div>
+                    <div class="col-2">
+                        <span><button title="Remove item from order if not available" (click)="removeItemFromOrder(item)" class="btn btn-danger btn-fab btn-icon btn-round animation-on-hover"><i class="tim-icons icon-simple-remove"></i></button></span>
                     </div>
                 </div>
 

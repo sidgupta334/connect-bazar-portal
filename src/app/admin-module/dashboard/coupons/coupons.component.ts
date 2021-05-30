@@ -24,11 +24,11 @@ export class CouponsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (!sessionStorage.getItem("token")) {
+    if (!localStorage.getItem("token")) {
       this.router.navigate([""]);
     }
-    this.vendorId = sessionStorage.getItem("vendorId")
-      ? sessionStorage.getItem("vendorId")
+    this.vendorId = localStorage.getItem("vendorId")
+      ? localStorage.getItem("vendorId")
       : null;
     if(!this.vendorId) {
       this.getAllVendors();

@@ -29,7 +29,7 @@ export class CategoriesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (!sessionStorage.getItem("token")) {
+    if (!localStorage.getItem("token")) {
       this.router.navigate([""]);
     }
 
@@ -70,7 +70,7 @@ export class CategoriesComponent implements OnInit {
           subCategories = _.sortBy(subCategories, ["subCategoryId"]);
           ct.subCategories = subCategories;
         });
-        this.categoryHierarchy = categories;
+        this.categoryHierarchy = _.sortBy(categories, 'categoryName');
       });
     });
   }
@@ -363,7 +363,7 @@ export class CategoriesComponent implements OnInit {
                 this.categoryId = null;
                 Swal.fire({
                   title: "Success!",
-                  text: "Category created successfully.",
+                  text: "Category saved successfully.",
                   icon: "success",
                   confirmButtonText: "OK",
                 });
@@ -373,7 +373,7 @@ export class CategoriesComponent implements OnInit {
               (err) => {
                 Swal.fire({
                   title: "Error!",
-                  text: "Unable to create Category",
+                  text: "Unable to save Category",
                   icon: "error",
                   confirmButtonText: "OK",
                 });
@@ -408,7 +408,7 @@ export class CategoriesComponent implements OnInit {
             () => {
               Swal.fire({
                 title: "Success!",
-                text: "Category created successfully.",
+                text: "Category saved successfully.",
                 icon: "success",
                 confirmButtonText: "OK",
               });
@@ -418,7 +418,7 @@ export class CategoriesComponent implements OnInit {
             (err) => {
               Swal.fire({
                 title: "Error!",
-                text: "Unable to create Category",
+                text: "Unable to save Category",
                 icon: "error",
                 confirmButtonText: "OK",
               });

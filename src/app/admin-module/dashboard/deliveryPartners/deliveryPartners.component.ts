@@ -38,11 +38,11 @@ export class DeliveryPartnersComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.vendorId = sessionStorage.getItem("vendorId")
-      ? sessionStorage.getItem("vendorId")
+    this.vendorId = localStorage.getItem("vendorId")
+      ? localStorage.getItem("vendorId")
       : null;
 
-    if (!sessionStorage.getItem("token")) {
+    if (!localStorage.getItem("token")) {
       this.router.navigate([""]);
     }
     this.getAllUsers();

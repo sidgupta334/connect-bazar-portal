@@ -62,19 +62,19 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (!sessionStorage.getItem("token")) {
+    if (!localStorage.getItem("token")) {
       this.router.navigate([""]);
     }
 
-    this.vendorId = sessionStorage.getItem("vendorId")
-      ? sessionStorage.getItem("vendorId")
+    this.vendorId = localStorage.getItem("vendorId")
+      ? localStorage.getItem("vendorId")
       : null;
 
     //Default selected settings
     this.defaultClasses();
 
-    if (sessionStorage.getItem("submenu")) {
-      this.navigateSubMenu(sessionStorage.getItem("submenu"));
+    if (localStorage.getItem("submenu")) {
+      this.navigateSubMenu(localStorage.getItem("submenu"));
     } else {
       this.navigateSubMenu(this.navItems.OVERVIEW.path);
     }
@@ -86,70 +86,70 @@ export class DashboardComponent implements OnInit {
 
     switch (subMenu) {
       case NAV_ITEMS.OVERVIEW.path:
-        sessionStorage.setItem("submenu", this.navItems.OVERVIEW.path);
+        localStorage.setItem("submenu", this.navItems.OVERVIEW.path);
         this.defaultClasses();
         this.navItems.OVERVIEW.isActive = true;
         this.router.navigate(["dashboard", this.navItems.OVERVIEW.path]);
         break;
 
       case NAV_ITEMS.SALES.path:
-        sessionStorage.setItem("submenu", this.navItems.SALES.path);
+        localStorage.setItem("submenu", this.navItems.SALES.path);
         this.defaultClasses();
         this.navItems.SALES.isActive = true;
         this.router.navigate(["dashboard", this.navItems.SALES.path]);
         break;
 
       case NAV_ITEMS.CATEGORIES.path:
-        sessionStorage.setItem("submenu", this.navItems.CATEGORIES.path);
+        localStorage.setItem("submenu", this.navItems.CATEGORIES.path);
         this.defaultClasses();
         this.navItems.CATEGORIES.isActive = true;
         this.router.navigate(["dashboard", this.navItems.CATEGORIES.path]);
         break;
 
       case NAV_ITEMS.PRODUCTS.path:
-        sessionStorage.setItem("submenu", this.navItems.PRODUCTS.path);
+        localStorage.setItem("submenu", this.navItems.PRODUCTS.path);
         this.defaultClasses();
         this.navItems.PRODUCTS.isActive = true;
         this.router.navigate(["dashboard", this.navItems.PRODUCTS.path]);
         break;
 
       case NAV_ITEMS.USERS.path:
-        sessionStorage.setItem("submenu", this.navItems.USERS.path);
+        localStorage.setItem("submenu", this.navItems.USERS.path);
         this.defaultClasses();
         this.navItems.USERS.isActive = true;
         this.router.navigate(["dashboard", this.navItems.USERS.path]);
         break;
 
       case NAV_ITEMS.BANNERS.path:
-        sessionStorage.setItem("submenu", this.navItems.BANNERS.path);
+        localStorage.setItem("submenu", this.navItems.BANNERS.path);
         this.defaultClasses();
         this.navItems.BANNERS.isActive = true;
         this.router.navigate(["dashboard", this.navItems.BANNERS.path]);
         break;
 
       case NAV_ITEMS.COUPONS.path:
-        sessionStorage.setItem("submenu", this.navItems.COUPONS.path);
+        localStorage.setItem("submenu", this.navItems.COUPONS.path);
         this.defaultClasses();
         this.navItems.COUPONS.isActive = true;
         this.router.navigate(["dashboard", this.navItems.COUPONS.path]);
         break;
 
       case NAV_ITEMS.PINCODES.path:
-        sessionStorage.setItem("submenu", this.navItems.PINCODES.path);
+        localStorage.setItem("submenu", this.navItems.PINCODES.path);
         this.defaultClasses();
         this.navItems.PINCODES.isActive = true;
         this.router.navigate(["dashboard", this.navItems.PINCODES.path]);
         break;
 
       case NAV_ITEMS.DELIVERY_PARTNERS.path:
-        sessionStorage.setItem("submenu", this.navItems.DELIVERY_PARTNERS.path);
+        localStorage.setItem("submenu", this.navItems.DELIVERY_PARTNERS.path);
         this.defaultClasses();
         this.navItems.DELIVERY_PARTNERS.isActive = true;
         this.router.navigate(["dashboard", this.navItems.DELIVERY_PARTNERS.path]);
         break;
 
       default:
-        sessionStorage.setItem("submenu", this.navItems.OVERVIEW.path);
+        localStorage.setItem("submenu", this.navItems.OVERVIEW.path);
         this.defaultClasses();
         this.navItems.OVERVIEW.isActive = true;
         this.router.navigate(["dashboard", this.navItems.OVERVIEW.path]);
@@ -168,11 +168,11 @@ export class DashboardComponent implements OnInit {
     this.rest.logoutUser().subscribe((res) => {});
 
     this.utils.setLoggedStatus(false);
-    sessionStorage.removeItem("submenu");
-    sessionStorage.removeItem("name");
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("email");
-    sessionStorage.removeItem("vendorId");
+    localStorage.removeItem("submenu");
+    localStorage.removeItem("name");
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    localStorage.removeItem("vendorId");
     this.router.navigate([""]);
   }
 }

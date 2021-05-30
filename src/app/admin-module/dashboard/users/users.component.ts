@@ -27,7 +27,7 @@ export class UsersComponent implements OnInit {
   constructor(private rest: RestService, private formBuilder: FormBuilder, private router: Router) {}
 
   ngOnInit() {
-    if (!sessionStorage.getItem("token")) {
+    if (!localStorage.getItem("token")) {
       this.router.navigate([""]);
     }
     this.getAllUsers();

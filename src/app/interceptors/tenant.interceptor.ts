@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class TenantInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        let token = sessionStorage.getItem('token');
+        let token = localStorage.getItem('token');
         if(token == null) {
             token = '';
         }

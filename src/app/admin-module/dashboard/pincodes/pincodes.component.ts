@@ -23,7 +23,7 @@ export class PincodesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (!sessionStorage.getItem("token")) {
+    if (!localStorage.getItem("token")) {
       this.router.navigate([""]);
     }
     this.addForm = this.formBuilder.group({

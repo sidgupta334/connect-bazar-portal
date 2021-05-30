@@ -19,14 +19,14 @@ export class UtilsService {
 
   public setLoggedStatus(status) {
     if (status) {
-      sessionStorage.setItem("loginStatus", "Y");
+      localStorage.setItem("loginStatus", "Y");
     } else {
-      sessionStorage.setItem("loginStatus", "N");
+      localStorage.setItem("loginStatus", "N");
     }
   }
 
   public getLoggedStatus() {
-    let status = sessionStorage.getItem("loginStatus");
+    let status = localStorage.getItem("loginStatus");
 
     if (status == "Y") {
       return true;

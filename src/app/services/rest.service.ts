@@ -6,8 +6,8 @@ import { HttpClient } from "@angular/common/http";
 })
 export class RestService {
   // private SERVER: String = "http://13.234.174.149:8080";
-  // private SERVER: string = "http://ec2-3-140-91-142.us-east-2.compute.amazonaws.com:8080";
-   private SERVER: string = "https://connect-it-api.herokuapp.com";
+  private SERVER: string = "http://ec2-3-140-91-142.us-east-2.compute.amazonaws.com:8080";
+  //  private SERVER: string = "https://connect-it-api.herokuapp.com";
   // private SERVER = "http://localhost:8080";
    
   LOGIN: string = "/users/login";
@@ -68,6 +68,7 @@ export class RestService {
   CREATE_SUB_CATEGORY = "/subCategory/create";
   DELETE_SUB_CATEGORY = "/subCategory/remove/";
   GET_SUB_CATEGORIES_FROM_CATEGORY = "/subCategory/get/";
+  REMOVE_PRODUCT_FROM_ORDER = "/order/remove/";
 
   constructor(private http: HttpClient) {}
 
@@ -366,6 +367,11 @@ export class RestService {
 
   public getSubCategoriesFromCategory(categoryId: number) {
     const url = this.SERVER.concat(this.GET_SUB_CATEGORIES_FROM_CATEGORY, categoryId.toString());
+    return this.http.get(url);
+  }
+
+  public removeProductFromOrder(orderId, productId) {
+    const url = this.SERVER.concat(this.REMOVE_PRODUCT_FROM_ORDER, orderId, "/", productId);
     return this.http.get(url);
   }
 }

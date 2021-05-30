@@ -13,12 +13,6 @@
                         <p>Overview</p>
                     </a>
                 </li>
-                <li [ngClass]="{active: navItems.SALES.isActive}">
-                    <a (click)="navigateSubMenu('sales')">
-                        <i class=" tim-icons icon-coins "></i>
-                        <p>Sales</p>
-                    </a>
-                </li>
 
                 <li *ngIf="!vendorId" [ngClass]="{active: navItems.CATEGORIES.isActive}">
                     <a (click)="navigateSubMenu('categories')">
@@ -38,6 +32,13 @@
                     <a (click)="navigateSubMenu('users')">
                         <i class="tim-icons icon-single-02"></i>
                         <p>Users Management</p>
+                    </a>
+                </li>
+
+                <li [ngClass]="{active: navItems.SALES.isActive}">
+                    <a (click)="navigateSubMenu('sales')">
+                        <i class=" tim-icons icon-coins "></i>
+                        <p>Sales</p>
                     </a>
                 </li>
 

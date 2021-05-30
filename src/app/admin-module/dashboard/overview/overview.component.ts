@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { RestService } from "src/app/services/rest.service";
 import { UtilsService } from "src/app/services/utils.service";
@@ -11,8 +11,9 @@ import _ from "lodash";
   templateUrl: "./overview.component.html",
   styleUrls: ["./overview.component.css"],
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnDestroy {
   ordersList: any = [];
+  startInterval: any;
   deliveryPartnerList: any = [];
   searchRecord: any;
   vendorId: any = null;
@@ -21,6 +22,7 @@ export class OverviewComponent implements OnInit {
   p: any = 1;
   dishesList: any = [];
   isSafe: any;
+  isTimerValid: boolean;
   selectedOrder: any;
   selectedVendor: any = null;
   quantitiesList: any = [];
@@ -46,23 +48,35 @@ export class OverviewComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    if (!sessionStorage.getItem("token")) {
+    this.isTimerValid = true;
+    if (!localStorage.getItem("token")) {
       this.router.navigate([""]);
     }
 
-    this.vendorId = sessionStorage.getItem("vendorId")
-      ? sessionStorage.getItem("vendorId")
+    this.vendorId = localStorage.getItem("vendorId")
+      ? localStorage.getItem("vendorId")
       : null;
 
     this.vendorId ? this.updateStatusTableVendor() : this.updateStatusTable();
     await this.getSalesDetails();
 
-    window.setInterval(() => {
-      this.vendorId ? this.updateStatusTableVendor() : this.updateStatusTable();
-    }, 100000);
+    this.startInterval = setInterval(() => {
+      if(this.isTimerValid) {
+        this.vendorId ? this.updateStatusTableVendor() : this.updateStatusTable();
+      }
+    }, 30000);
 
     this.getAllDeliveryPartners();
   }
+  
+
+  ngOnDestroy(): void {
+    if(this.startInterval) {
+      clearInterval(this.startInterval);
+    }
+    this.isTimerValid = false;
+  }
+
 
   getAllDeliveryPartners() {
     this.deliveryPartnerList = [];
@@ -151,7 +165,7 @@ export class OverviewComponent implements OnInit {
                 this.vendorId
                   ? this.updateStatusTableVendor()
                   : this.updateStatusTable();
-                
+
                 this.getSalesDetails();
 
                 Swal.fire({
@@ -325,8 +339,8 @@ ${this._ensureSafeDelivery(order)}`;
       paymentMethod: item.paymentMethod,
       discountApplied: item.discountApplied,
       serviceCharge: item.serviceCharge,
-      cgst: (this._calculateGST(item.finalTotal)/2).toFixed(2),
-      sgst: (this._calculateGST(item.finalTotal)/2).toFixed(2),
+      cgst: (this._calculateGST(item.finalTotal) / 2).toFixed(2),
+      sgst: (this._calculateGST(item.finalTotal) / 2).toFixed(2),
       loaded: true,
     };
     setTimeout(() => {
@@ -335,7 +349,33 @@ ${this._ensureSafeDelivery(order)}`;
   }
 
   _calculateGST(total: any) {
-    let basePrice: any = ((total*100)/105).toFixed(2);
+    let basePrice: any = ((total * 100) / 105).toFixed(2);
     return total - basePrice;
+  }
+
+  removeItemFromOrder(product) {
+    this.rest
+      .removeProductFromOrder(this.selectedOrder, product.productId)
+      .subscribe(
+        (res: any) => {
+          this.dishesList = this.dishesList.filter(
+            (pr) => pr.productId !== product.productId
+          );
+          this.ordersList = this.ordersList.map((order) => {
+            if (order.orderId === this.selectedOrder) {
+              order = res;
+            }
+            return order;
+          });
+        },
+        (err) => {
+          Swal.fire({
+            title: "Error!",
+            text: "Unable to remove this product from order",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
+      );
   }
 }

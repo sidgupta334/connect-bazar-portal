@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.token = sessionStorage.getItem("token");
+    this.token = localStorage.getItem("token");
     if (this.token) {
       this.router.navigate(["dashboard"]);
     }
@@ -50,12 +50,12 @@ export class LoginComponent implements OnInit {
       (res: any) => {
         //Save user data to session storage for state management
         this.utils.setLoggedStatus(true);
-        sessionStorage.setItem("email", res.email);
-        sessionStorage.setItem("name", res.fullName);
-        sessionStorage.setItem("token", res.token);
-        sessionStorage.setItem("userType", res.userType);
+        localStorage.setItem("email", res.email);
+        localStorage.setItem("name", res.fullName);
+        localStorage.setItem("token", res.token);
+        localStorage.setItem("userType", res.userType);
         if(res.userType === 'VENDOR') {
-          sessionStorage.setItem("vendorId", res.userId);
+          localStorage.setItem("vendorId", res.userId);
         }
 
         // Set data to shared service

@@ -42,8 +42,7 @@
                     </option>
                 </select>
             </div>
-
-            <form *ngIf="selectedFilter == 'paymentMode' || selectedFilter == 'pinCode' || selectedFilter == 'transactionId'" [formGroup]="textForm" class="flex-horizontal">
+            <form *ngIf="selectedFilter == 'orderId' || selectedFilter == 'paymentMode' || selectedFilter == 'pinCode' || selectedFilter == 'transactionId'" [formGroup]="textForm" class="flex-horizontal">
                 <div class="form-group" style="width: 150px; margin-right: 20px;">
                     <label for="textBox" class="white-filter">Enter Text</label>
                     <input id="textBox" class="form-control" type="text" formControlName="textbox" placeholder="Search Here">
@@ -100,6 +99,9 @@
                         <thead class=" text-primary">
                             <tr>
                                 <th class="text-center">
+                                    Order ID
+                                </th>
+                                <th class="text-center">
                                     Customer Name
                                 </th>
                                 <th class="text-center">
@@ -116,6 +118,9 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let item of orders | filter: searchRecord | paginate: {id: 'salesPaginate', itemsPerPage: 10, currentPage: p}; let i = index">
+                                <td class="text-center" style="font-weight: bolder;">
+                                    {{item.orderId}}
+                                </td>
 
                                 <td class="text-center">
                                     {{item.fullName}}
@@ -126,7 +131,7 @@
                                 </td>
 
                                 <td class="text-center">
-                                    {{item.finalTotal}}
+                                    ₹ {{item.finalTotal}}
                                 </td>
 
                                 <td class="text-center">

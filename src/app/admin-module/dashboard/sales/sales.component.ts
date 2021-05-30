@@ -15,10 +15,11 @@ export class SalesComponent implements OnInit {
   p: any;
 
   filterOptions: any = [
-    { value: "paymentMode", label: "Online Payment Mode" },
-    { value: "paymentMethod", label: "Payment Method" },
+    { value: "orderId", label: "Order ID" },
     { value: "pinCode", label: "Pin Code" },
     { value: "dates", label: "Dates" },
+    { value: "paymentMethod", label: "Payment Method" },
+    { value: "paymentMode", label: "Online Payment Mode" },
     { value: "transactionId", label: "Transaction Id" },
   ];
 
@@ -91,14 +92,14 @@ export class SalesComponent implements OnInit {
   async ngOnInit() {
     this.chartData = await this.rest.getChartsData();
     this.updateChartData("Days");
-    this.selectedFilter = "paymentMode";
+    this.selectedFilter = "orderId";
     this.paymentFilter = "COD";
 
     // window.setInterval(() => {
     //   this.chartData = this.utils.getChartData();
     // }, 45000);
 
-    this.rest.filterOrders().subscribe((res: any) => {
+     this.rest.filterOrders().subscribe((res: any) => {
       this.orders = res;
     });
 
@@ -162,7 +163,9 @@ export class SalesComponent implements OnInit {
 
   filterOrders(filter) {
     let url;
-    if (filter == "paymentMode") {
+    if (filter == "orderId") {
+      url = `/order/filter/orderId/${this.textForm.value.textbox}`;
+    } else if (filter == "paymentMode") {
       url = `/order/filter/paymentMode/${this.textForm.value.textbox}`;
     } else if (filter == "pinCode") {
       url = `/order/filter/pincode/${this.textForm.value.textbox}`;
